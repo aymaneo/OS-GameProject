@@ -62,7 +62,7 @@
             "label": "Run Sextant",
             "type": "shell",
             "windows": {
-                "command": "cd build/boot; c:\\sextant\\qemu\\qemu.exe -L \"c:\\sextant\\qemu\" -no-kqemu -net 'nic,model=ne2k_isa' -net user -tftp ./ -cdrom grub.iso",
+                "command": "cd build/boot; c:\\sextant\\qemu\\qemu.exe -L \"c:\\sextant\\qemu\" -no-kqemu -m 4 -net 'nic,model=ne2k_isa' -net user -tftp ./ -cdrom grub.iso",
                 "options": {
                     "env": {
                         "PATH": "C:\\sextant\\ccompil"
@@ -71,11 +71,11 @@
             },
             "linux": {
                 "comments": "To quit Alt + 2 > quit",
-                "command": "cd build/boot; qemu-system-x86_64 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+                "command": "cd build/boot; qemu-system-x86_64 -m 4 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
             },
             "osx": {
                 "comments": "To quit Alt + 2 > quit",
-                "command": "cd build/boot; qemu-system-x86_64 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+                "command": "cd build/boot; qemu-system-x86_64 -m 4 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
             },
             "group": {
                 "kind": "build",
@@ -87,7 +87,7 @@
             "label": "Debug Sextant",
             "type": "shell",
             "windows": {
-                "command": "cd build/boot; c:\\sextant\\qemu\\qemu.exe -S -s -L \"c:\\sextant\\qemu\" -net nic,model=ne2k_isa -net user -tftp ./ -cdrom grub.iso",
+                "command": "cd build/boot; c:\\sextant\\qemu\\qemu.exe -S -s -L \"c:\\sextant\\qemu\" -m 4 -net nic,model=ne2k_isa -net user -tftp ./ -cdrom grub.iso",
                 "options": {
                     "env": {
                         "PATH": "C:\\sextant\\ccompil"
@@ -96,11 +96,11 @@
             },
             "linux": {
                 "comments": "To quit Alt + 2 > quit",
-                "command": "cd build/boot; qemu-system-i386 -S -s -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+                "command": "cd build/boot; qemu-system-i386 -S -s -m 4 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
             },
             "osx": {
                 "comments": "To quit Alt + 2 > quit",
-                "command": "cd build/boot; qemu-system-i386 -S -s -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+                "command": "cd build/boot; qemu-system-i386 -S -s -m 4 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
             },
             "group": {
                 "kind": "build",
@@ -116,11 +116,11 @@
             },
             "linux": {
                 "comments": "To quit Alt + 2 > quit",
-                "command": "cd build/boot; qemu-system-x86_64 -display curses -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+                "command": "cd build/boot; qemu-system-x86_64 -display curses -m 4 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
             },
             "osx": {
                 "comments": "To quit Alt + 2 > quit",
-                "command": "cd build/boot; qemu-system-x86_64 -display curses -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+                "command": "cd build/boot; qemu-system-x86_64 -display curses -m 4 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
             },
             "group": {
                 "kind": "build",
@@ -132,7 +132,7 @@
             "label": "Debug Sextant (nographic)",
             "type": "shell",
             "windows": {
-                "command": "cd build/boot; c:\\sextant\\qemu\\qemu.exe -S -s -L \"c:\\sextant\\qemu\" -net nic,model=ne2k_isa -net user -tftp ./ -cdrom grub.iso",
+                "command": "cd build/boot; c:\\sextant\\qemu\\qemu.exe -S -s -L \"c:\\sextant\\qemu\" -m 4 -net nic,model=ne2k_isa -net user -tftp ./ -cdrom grub.iso",
                 "options": {
                     "env": {
                         "PATH": "C:\\sextant\\ccompil"
@@ -141,11 +141,11 @@
             },
             "linux": {
                 "comments": "To quit Alt + 2 > quit",
-                "command": "cd build/boot; qemu-system-i386 -display curses -S -s -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+                "command": "cd build/boot; qemu-system-i386 -display curses -S -s -m 4 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
             },
             "osx": {
                 "comments": "To quit Alt + 2 > quit",
-                "command": "cd build/boot; qemu-system-i386 -display curses -S -s -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
+                "command": "cd build/boot; qemu-system-i386 -display curses -S -s -m 4 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso"
             },
             "group": {
                 "kind": "build",
