@@ -8,15 +8,9 @@
 #include "Spinlock.h"
 
 void Spinlock::Take(int *lck){
-
 	for (int i=0;i<16;i++)
 		if (i!=2)  i8259_disable_irq_line(i);
-
-	//while((*lck)<1){};
-
 	while ( (TestAndSet(lck) )!=0);
-
-//	--(*lck);
 }
 
 
