@@ -74,6 +74,6 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 
 	ecran.effacerEcran(NOIR);
 
-	ecran.afficherCaractere(BLANC, NOIR, 'Hello World!');
+	ecran.afficherMot(1,1,"Hello World!", NOIR);
 
 }
