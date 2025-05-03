@@ -32,8 +32,6 @@
  */
 
 #include <sextant/types.h>
-//#include <hal/segment.h>
-
 
 /* Mapping of the CPU exceptions in the IDT (imposed by Intel
    standards) */

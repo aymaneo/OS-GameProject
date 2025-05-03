@@ -17,6 +17,7 @@
 #include <sextant/memoire/MemoirePion.h>
 #include <sextant/memoire/pagination/MemoirePhysique.h>
 #include <sextant/memoire/pagination/Pagination.h>
+#include <Applications/Platform.h>
 
 //#include <Applications/Entity/Entity.h>
 
@@ -67,13 +68,15 @@ void Sextant_Init(){
 
 
 
-
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
 	Sextant_Init();
 
 	ecran.effacerEcran(NOIR);
 
-	ecran.afficherMot(1,1,"Hello World!", NOIR);
-
+	ecran.afficherMot(1,1,"Hello You !", NOIR);
+	
+	Platform plat = Platform(10, 15);
+	ecran.renderScene(plat);
+	while (true){}
 }

@@ -1,7 +1,8 @@
 #include "Ecran.h"
 #include <sextant/stdargs.h>
+#include <Applications/Platform.h>
 
-// Ici nous allons manipuler un tableau ecran dont on fixe l'origine au début de la zone mémoire video.
+// Ici nous allons manipuler un tableau ecran dont on fixe l'origine au dï¿½but de la zone mï¿½moire video.
 
 volatile caseEcran* Ecran::origine = (volatile caseEcran*)VIDEO;
 
@@ -79,7 +80,6 @@ unsigned char Ecran::coderAttribut(Couleur prPlan, Couleur arPlan) {
 }
 
 // Les accesseurs
-
 int Ecran::getLigne(){
 	return ligne;
 }
@@ -104,10 +104,10 @@ void Ecran::avancerPositionCourrante(){
 	int c = getColonne();
 	int l = getLigne();
 	c=c+1;
-	if(c >=COLONNES){//hors de l'écran, trop à  droite
+	if(c >=COLONNES){//hors de l'ï¿½cran, trop ï¿½ droite
 		c = 0;
 		l++;
-		if(l>=LIGNES){//hors de l'écran, trop bas
+		if(l>=LIGNES){//hors de l'ï¿½cran, trop bas
 			defilement(1);
 			l--;
 		}
@@ -123,7 +123,7 @@ void Ecran::sautDeLigne(){
 	c=0;
 	l=l+1;
 
-	if(l>=LIGNES){//hors de l'écran, trop bas
+	if(l>=LIGNES){//hors de l'ï¿½cran, trop bas
 			defilement(1);
 			l--;
 		}
@@ -131,12 +131,10 @@ void Ecran::sautDeLigne(){
 	setLigne(l);
 }
 
+
 // Partie fonctionnelle
 
-
-
 // Efface l'ecran avec pour couleur de fond arPlan
-
 void Ecran::effacerEcran(Couleur arPlan) {
 	arrierePlan = arPlan;
 	unsigned char attribut = coderAttribut(arrierePlan, arrierePlan);
@@ -149,21 +147,17 @@ void Ecran::effacerEcran(Couleur arPlan) {
 }
 
 // Affiche un Caractere a la position courrante
-
-
-
 void Ecran::afficherCaractere(Couleur prPlan,Couleur arPlan,const char caractere) {
 
 	afficherCaractere(getLigne(),getColonne(), prPlan, arPlan, caractere);
 	avancerPositionCourrante();
 }
 
-// Affiche un Caractere a la position donnée en parametre (l,c)
-
+// Affiche un Caractere a la position donnï¿½e en parametre (l,c)
 void Ecran::afficherCaractere(int l,int c,Couleur prPlan,Couleur arPlan,const char caractere) {
 	unsigned char attribut = coderAttribut(prPlan, arPlan);
 
-	//Si en dehors de l'écran, ne rien faire
+	//Si en dehors de l'ï¿½cran, ne rien faire
 	if ((c >=COLONNES) || (l >= LIGNES)) return;
 
 	int position = l * COLONNES + c; // position lineaire relative
@@ -173,7 +167,6 @@ void Ecran::afficherCaractere(int l,int c,Couleur prPlan,Couleur arPlan,const ch
 }
 
 // Affiche une chaine de caractere a la position courante
-
 void Ecran::afficherMot(int l,int c,const char *mot,Couleur prPlan) {
 
 	setLigne(l);
@@ -184,8 +177,8 @@ void Ecran::afficherMot(int l,int c,const char *mot,Couleur prPlan) {
 void Ecran::afficherMot(const char *mot,Couleur prPlan) {
 	int i=0;
 
-	while(mot[i]!='\0'){ // '\0' : caractère de fin
-		if(mot[i] == '\n'){ // '\n' : passage à  la ligne
+	while(mot[i]!='\0'){ // '\0' : caractï¿½re de fin
+		if(mot[i] == '\n'){ // '\n' : passage ï¿½ la ligne
 			sautDeLigne();
 		}else
 			afficherCaractere(prPlan,arrierePlan, mot[i]);
@@ -195,7 +188,6 @@ void Ecran::afficherMot(const char *mot,Couleur prPlan) {
 }
 
 // Affiche le curseur (mais la postion courante ne change pas)
-
 void Ecran::afficherCurseur(){
 	int position = positionCourrante();
 
@@ -205,8 +197,7 @@ void Ecran::afficherCurseur(){
 
 }
 
-// gere le défilement de nline d'un coup. les nouvelles lignes ont pour fond la couler de fond courante
-
+// gere le dï¿½filement de nline d'un coup. les nouvelles lignes ont pour fond la couler de fond courante
 void Ecran::defilement(int nline) {
 	int i,j;
 
@@ -221,7 +212,6 @@ void Ecran::defilement(int nline) {
 				origine[(i*COLONNES)+j].couleurs = arrierePlan;
 			}
 }
-
 
 void Ecran::afficherChiffre(int l,int c, const int valeur){
 		static const char num[] = {'0','1','2','3','4','5','6','7','8','9'};
@@ -247,7 +237,7 @@ void Ecran::afficherChiffre(int l,int c, const int valeur){
 			 count=count+1;
 		 }
 
-		// ajout du signe si valeur est négative
+		// ajout du signe si valeur est nï¿½gative
 		 if (valeur<0){
 			 chaine[count]='-';
 			 count=count+1;
@@ -257,12 +247,11 @@ void Ecran::afficherChiffre(int l,int c, const int valeur){
 			 resultat[j]=chaine[i];
 		 }
 
-		 // ajout du caractère de fin de chaine */
+		 // ajout du caractï¿½re de fin de chaine */
 		 resultat[count]='\0';
 
 		afficherMot(l,c,resultat, BLANC);
 }
-
 
 void Ecran::afficherChiffre( const int valeur){
 	afficherChiffre(getLigne(),getColonne(), valeur);
@@ -319,7 +308,6 @@ void Ecran::afficherBase(unsigned int entier,int base,Couleur prPlan) {
 				}
 }
 
-
 void Ecran::miniprintf(char *fmt, ...) {
   va_list ap;
   char *p;
@@ -355,4 +343,20 @@ void Ecran::miniprintf(char *fmt, ...) {
     }
   }
   va_end(ap);
+}
+
+void Ecran::renderScene(Platform platform){
+	effacerEcran(NOIR);
+
+	// print walls
+	for (size_t i = 0; i < LIGNES; i++){
+		afficherCaractere(i, 0, BLANC, NOIR, 'H');
+		afficherCaractere(i, COLONNES-1, BLANC, NOIR, 'H');
+	}
+
+	// print platform
+	for (size_t i = 0; i < platform.size; i++){
+		afficherCaractere(platform.y, platform.x+i, BLANC, NOIR, '-');
+	}
+	
 }

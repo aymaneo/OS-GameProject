@@ -33,10 +33,9 @@ sextant_ret_t idt_setup()
       /* Setup an empty IDTE interrupt gate, see figure 5-2 in Intel
 	 x86 doc, vol 3 */
 //      idte->seg_sel   = BUILD_SEGMENT_REG_VALUE(0, false, SEG_KCODE);
-      idte->seg_sel   = 0x08; // numéro segment de code définit par défaut par Grub lors de l'initailiasation flat mode de la GDT
+      idte->seg_sel   = 0x08; // numï¿½ro segment de code dï¿½finit par dï¿½faut par Grub lors de l'initailiasation flat mode de la GDT
       idte->reserved  = 0;
       idte->flags     = 0;
-//     idte->type      = 0x6; /* Interrupt gate (110b) 16 bits */
       idte->type      = 0xE; /* Interrupt gate (110b) */
       idte->op_size   = 1;   /* 32bits instructions */
       idte->zero      = 0;
