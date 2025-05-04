@@ -1,11 +1,11 @@
 #include "Platform.h"
 
-int Platform::size = 5;
+int Platform::size = 10;
 
 void Platform::moveLeft() {
-    this->x += -1;
+    x--;
 }
 
 void Platform::moveRight() {
-    this->x += 1;
+    x++;
 }

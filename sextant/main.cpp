@@ -10,6 +10,7 @@
 #include <sextant/memoire/Memoire.h>
 #include <sextant/ordonnancements/cpu_context.h>
 #include <sextant/ordonnancements/preemptif/thread.h>
+#include <sextant/ordonnancements/preemptif/time.h>
 #include <sextant/types.h>
 #include <sextant/Synchronisation/Spinlock/Spinlock.h>
 #include <sextant/memoire/segmentation/gdt.h>
@@ -63,20 +64,46 @@ void Sextant_Init(){
 	thread_subsystem_setup(bootstrap_stack_bottom,bootstrap_stack_size);
 	sched_subsystem_setup();
 	irq_set_routine(IRQ_TIMER, sched_clk);
+	
 }
 
+#define L_P1 's'
+#define R_P1 'd'
+#define L_P2 'j'
+#define R_P2 'k'
+void update_plat(void* arg) {
+    Clavier* keyboard = static_cast<Clavier*>(arg);
+    while (true) {
+		char c = keyboard->getchar();
+		if (c == L_P1) {
+            PlatformManager::getInstance().getPlatform1().moveLeft();
+        }else if(c == R_P1) {
+            PlatformManager::getInstance().getPlatform1().moveRight();
+        }else if(c == L_P2) {
+            PlatformManager::getInstance().getPlatform2().moveLeft();
+        }else if (c == R_P2) {
+            PlatformManager::getInstance().getPlatform2().moveRight();
+        }
+        thread_yield();
+    }
+}
 
-
+void update_screen(void* arg) {
+    Ecran* screen = static_cast<Ecran*>(arg);
+    while (true) {
+		screen->renderScene();
+        thread_yield();
+    }
+}
 
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
 	Sextant_Init();
-
-	ecran.effacerEcran(NOIR);
-
-	ecran.afficherMot(1,1,"Hello You !", NOIR);
 	
-	Platform plat = Platform(10, 15);
-	ecran.renderScene(plat);
-	while (true){}
+	PlatformManager& manager = PlatformManager::getInstance();
+	ecran.effacerEcran(NOIR);
+	
+	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
+	struct thread* screen_thread = create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
+	thread_yield();
 }

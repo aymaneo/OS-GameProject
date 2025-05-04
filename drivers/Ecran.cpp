@@ -1,6 +1,6 @@
 #include "Ecran.h"
 #include <sextant/stdargs.h>
-#include <Applications/Platform.h>
+#include <Applications/PlatformManager.h>
 
 // Ici nous allons manipuler un tableau ecran dont on fixe l'origine au d�but de la zone m�moire video.
 
@@ -345,7 +345,7 @@ void Ecran::miniprintf(char *fmt, ...) {
   va_end(ap);
 }
 
-void Ecran::renderScene(Platform platform){
+void Ecran::renderScene(){
 	effacerEcran(NOIR);
 
 	// print walls
@@ -354,9 +354,16 @@ void Ecran::renderScene(Platform platform){
 		afficherCaractere(i, COLONNES-1, BLANC, NOIR, 'H');
 	}
 
-	// print platform
-	for (size_t i = 0; i < platform.size; i++){
-		afficherCaractere(platform.y, platform.x+i, BLANC, NOIR, '-');
+	// print platforms
+	PlatformManager& manager = PlatformManager::getInstance();
+    Platform& p1 = manager.getPlatform1();
+	for (size_t i = 0; i < p1.size; i++){
+		afficherCaractere(p1.y, p1.x+i, BLANC, NOIR, '-');
 	}
+	Platform& p2 = manager.getPlatform2();
+	for (size_t i = 0; i < p2.size; i++){
+		afficherCaractere(p2.y, p2.x+i, BLANC, NOIR, '-');
+	}
+	
 	
 }

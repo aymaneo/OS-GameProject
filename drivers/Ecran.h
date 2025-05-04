@@ -19,7 +19,7 @@
 
 #include <sextant/types.h>
 #include <hal/fonctionsES.h>
-#include <Applications/Platform.h>
+#include <Applications/PlatformManager.h>
 
 /**
  * @struct caseEcran
@@ -142,7 +142,7 @@ public :
 
 	void miniprintf(char *fmt, ...);
 
-    void renderScene(Platform platform);
+    void renderScene();
 
 };
 #endif

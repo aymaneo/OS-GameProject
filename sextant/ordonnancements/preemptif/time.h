@@ -27,8 +27,8 @@
 
 #include <sextant/types.h>
 #include <sextant/list.h>
-#include <interruption/irq.h>
-#include <memoire/memoire.h>
+#include <sextant/interruptions/irq.h>
+#include <sextant/memoire/Memoire.h>
 
 /**
  * Number of nanoseconds in 1 second

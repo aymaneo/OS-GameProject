@@ -4,7 +4,7 @@ extern bool modifBuf;
 extern char buf[256];
 extern int posBuf;
 
-bool Clavier::testChar() {//Retourne vrai si un caract�re a �t� saisi au clavier
+bool Clavier::testChar() {
 	return modifBuf;
 }
 
