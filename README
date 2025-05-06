@@ -1,0 +1,4 @@
+# Simple commands
+cd ../.. && make && cd build/boot; qemu-system-x86_64 -m 4 -net nic,model=ne2k_isa -net user,tftp=./ -cdrom grub.iso
+
+C:\Users\julie\PycharmProjects\deleteMeTranslator\.venv\Scripts\python.exe sprite.py ../../Applications/ressources/platform.png -p atari-8-bit-family-gtia.pal

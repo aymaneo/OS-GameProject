@@ -70,9 +70,7 @@ void set_vga_mode13(void) {
 }
 
 void clear_vga_screen(char color) {
-
     int i;
-
     for (i = 0; i < 320 * 200; i++) {
         video[i] = color;
     }
@@ -112,8 +110,7 @@ void set_palette_vga(unsigned char palette_vga[256][3]) {
 // Draw a w×h sprite at (dstX, dstY), skipping color 255
 void draw_sprite(const unsigned char* sprite,
                  int w, int h,
-                 int dstX, int dstY)
-{
+                 int dstX, int dstY){
     for (int yy = 0; yy < h; ++yy) {
         for (int xx = 0; xx < w; ++xx) {
             unsigned char c = sprite[yy * w + xx];

@@ -116,6 +116,7 @@ def png_to_c(path, external_palette=None,
 
     # Sprite data
     print(f"unsigned char {array_name}[{width_name}*{height_name}] = {{", file=sys.stdout)
+
     for i, pix in enumerate(data):
         sep = "," if i < len(data)-1 else ""
         end = "\n" if (i % 16 == 15) else " "

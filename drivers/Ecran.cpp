@@ -346,24 +346,26 @@ void Ecran::miniprintf(char *fmt, ...) {
 }
 
 void Ecran::renderScene(){
-	effacerEcran(NOIR);
-
+	clear_vga_screen(0);
+	
 	// print walls
-	for (size_t i = 0; i < LIGNES; i++){
-		afficherCaractere(i, 0, BLANC, NOIR, 'H');
-		afficherCaractere(i, COLONNES-1, BLANC, NOIR, 'H');
+	for (size_t i = 0; i < 200; i++){
+		plot_square(0, i, 1, 255);
+		plot_square(320-1, i, 1, 255);
 	}
 
 	// print platforms
 	PlatformManager& manager = PlatformManager::getInstance();
     Platform& p1 = manager.getPlatform1();
-	for (size_t i = 0; i < p1.size; i++){
-		afficherCaractere(p1.y, p1.x+i, BLANC, NOIR, '-');
-	}
+	draw_sprite(sprite_data,
+					SPRITE_WIDTH, SPRITE_HEIGHT,
+						p1.x, p1.y);
+	
 	Platform& p2 = manager.getPlatform2();
-	for (size_t i = 0; i < p2.size; i++){
-		afficherCaractere(p2.y, p2.x+i, BLANC, NOIR, '-');
-	}
+	draw_sprite(sprite_data,
+				SPRITE_WIDTH, SPRITE_HEIGHT,
+				p2.x, p2.y);
+	
 	
 	
 }

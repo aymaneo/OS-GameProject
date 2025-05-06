@@ -19,6 +19,8 @@
 #include <sextant/memoire/pagination/MemoirePhysique.h>
 #include <sextant/memoire/pagination/Pagination.h>
 #include <Applications/Platform.h>
+#include <sextant/vga/vga.h>
+#include <sextant/vga/sprite.h>
 
 //#include <Applications/Entity/Entity.h>
 
@@ -64,7 +66,8 @@ void Sextant_Init(){
 	thread_subsystem_setup(bootstrap_stack_bottom,bootstrap_stack_size);
 	sched_subsystem_setup();
 	irq_set_routine(IRQ_TIMER, sched_clk);
-	
+	set_vga_mode13(); 
+	set_palette_vga(palette_vga);
 }
 
 #define L_P1 's'

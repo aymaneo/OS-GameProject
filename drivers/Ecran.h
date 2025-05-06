@@ -20,6 +20,8 @@
 #include <sextant/types.h>
 #include <hal/fonctionsES.h>
 #include <Applications/PlatformManager.h>
+#include <sextant/vga/sprite.h>
+#include <sextant/vga/vga.h>
 
 /**
  * @struct caseEcran

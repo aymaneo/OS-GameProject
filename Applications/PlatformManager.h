@@ -8,7 +8,7 @@ private:
     Platform platform1;
     Platform platform2;
 
-    PlatformManager() : platform1(5, 10), platform2(10, 20) {}
+    PlatformManager() : platform1(150, 150), platform2(100, 100) {}
 
 public:
     static PlatformManager& getInstance();
