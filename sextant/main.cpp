@@ -21,6 +21,7 @@
 #include <Applications/Platform.h>
 #include <sextant/vga/vga.h>
 #include <sextant/vga/sprite.h>
+#include "Synchronisation/Mutex/Mutex.h"
 
 //#include <Applications/Entity/Entity.h>
 
@@ -28,8 +29,8 @@
 extern char __e_kernel,__b_kernel, __b_data, __e_data,  __b_stack, __e_load ;
 int i;
 
-extern vaddr_t bootstrap_stack_bottom; //Adresse de début de la pile d'exécution
-extern size_t bootstrap_stack_size;//Taille de la pile d'exécution
+extern vaddr_t bootstrap_stack_bottom;	//Adresse de début de la pile d'exécution
+extern size_t bootstrap_stack_size;		//Taille de la pile d'exécution
 
 Timer timer;
 //paddr_t kernel_core_base,kernel_core_top;
@@ -46,7 +47,6 @@ char tab[30000];
 Ecran ecran;
 memoire *InterfaceMemoire;
 Ecran *monEcran = &ecran;
-
 #define PAGINATION_USE 1
 
 
@@ -102,11 +102,8 @@ void update_screen(void* arg) {
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
 	Sextant_Init();
-	
 	PlatformManager& manager = PlatformManager::getInstance();
-	ecran.effacerEcran(NOIR);
-	
 	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
 	struct thread* screen_thread = create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
-	thread_yield();
+	thread_exit();
 }

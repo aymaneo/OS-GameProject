@@ -1,7 +1,5 @@
 #include "Platform.h"
 
-int Platform::size = 10;
-
 void Platform::moveLeft() {
     x--;
 }
