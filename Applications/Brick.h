@@ -1,5 +1,6 @@
 class Brick{
+private:
+    int x, y;
 public:
-    bool state;
-    Brick();
+    Brick(int x, int y) : x(x), y(y) {}
 };
