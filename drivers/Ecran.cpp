@@ -357,12 +357,12 @@ void Ecran::renderScene(){
 	// print platforms
 	PlatformManager& manager = PlatformManager::getInstance();
     Platform& p1 = manager.getPlatform1();
-	draw_sprite(sprite_data,
+	draw_sprite(manager.sprite,
 					SPRITE_WIDTH, SPRITE_HEIGHT,
 						p1.x, p1.y);
 	
 	Platform& p2 = manager.getPlatform2();
-	draw_sprite(sprite_data,
+	draw_sprite(manager.sprite,
 				SPRITE_WIDTH, SPRITE_HEIGHT,
 				p2.x, p2.y);
 	
