@@ -1,7 +1,8 @@
 #include "Balle.h"
-#include "../sextant/vga/vga.h"
+#include <sextant/vga/vga.h>
 
-Balle::Balle(int x, int y, int dx, int dy) : x(x), y(y), dx(dx), dy(dy) {}
+Balle::Balle(int x, int y, int dx, int dy)
+    : x(x), y(y), dx(dx), dy(dy) {}
 
 void Balle::move()
 {
@@ -9,11 +10,27 @@ void Balle::move()
     x += dx;
     y += dy;
 
-    // Simple bounce for testing, EN ATTENDANT LE COLISION MANGER
-    if (x <= 0 || x >= 320)
+    if (x < 0)
+    {
+        x = 0;
         dx = -dx;
-    if (y <= 0 || y >= 200)
+    }
+    else if (x > 318)
+    {
+        x = 318;
+        dx = -dx;
+    }
+
+    if (y < 0)
+    {
+        y = 0;
         dy = -dy;
+    }
+    else if (y > 198)
+    {
+        y = 198;
+        dy = -dy;
+    }
 
     draw();
 }
