@@ -2,7 +2,11 @@
 
 BalleManager *BalleManager::instance = nullptr;
 
-BalleManager::BalleManager() : count(0) {}
+BalleManager::BalleManager() : count(0)
+{
+    for (int i = 0; i < MAX_BALLS; ++i)
+        balles[i] = nullptr;
+}
 
 BalleManager &BalleManager::getInstance()
 {
@@ -14,15 +18,14 @@ BalleManager &BalleManager::getInstance()
 void BalleManager::spawnBall(int x, int y)
 {
     if (count < MAX_BALLS)
-    {
         balles[count++] = new Balle(x, y);
-    }
 }
 
 void BalleManager::update()
 {
-    for (int i = 0; i < count; i++)
+    for (int i = 0; i < count; ++i)
     {
-        balles[i]->move();
+        if (balles[i])
+            balles[i]->move();
     }
 }

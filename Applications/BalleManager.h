@@ -1,7 +1,7 @@
 #pragma once
 #include "Balle.h"
 
-#define MAX_BALLS 10
+static const int MAX_BALLS = 10;
 
 class BalleManager
 {
@@ -15,4 +15,6 @@ public:
     static BalleManager &getInstance();
     void spawnBall(int x, int y);
     void update();
+    int getCount() const { return count; }
+    Balle* getBalle(int i) const { return balles[i]; }
 };
