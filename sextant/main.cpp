@@ -19,7 +19,6 @@
 #include <sextant/memoire/pagination/Pagination.h>
 #include <Applications/Platform.h>
 #include <sextant/vga/vga.h>
-#include <sextant/vga/sprite.h>
 #include <Applications/BalleManager.h>
 
 extern char __e_kernel, __b_kernel, __b_data, __e_data, __b_stack, __e_load;
@@ -66,21 +65,13 @@ void update_plat(void *arg)
 	{
 		char c = keyboard->getchar();
 		if (c == L_P1)
-		{
 			PlatformManager::getInstance().getPlatform1().moveLeft();
-		}
 		else if (c == R_P1)
-		{
 			PlatformManager::getInstance().getPlatform1().moveRight();
-		}
 		else if (c == L_P2)
-		{
 			PlatformManager::getInstance().getPlatform2().moveLeft();
-		}
 		else if (c == R_P2)
-		{
 			PlatformManager::getInstance().getPlatform2().moveRight();
-		}
 		thread_yield();
 	}
 }
@@ -99,7 +90,7 @@ void update_balle(void *arg)
 {
 	struct time t;
 	t.sec = 0;
-
+	t.nanosec = 50000000;
 	while (true)
 	{
 		BalleManager::getInstance().update();
@@ -110,7 +101,6 @@ void update_balle(void *arg)
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr)
 {
 	address = addr;
-
 	Clavier clavier;
 	Sextant_Init();
 
@@ -118,11 +108,11 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr)
 	ecran.effacerEcran(NOIR);
 
 	Platform &p1 = manager.getPlatform1();
-	BalleManager::getInstance().spawnBall(p1.x, p1.y - 2);
+	BalleManager::getInstance().spawnBall(p1.x + 10, p1.y - Platform::size - 2);
 
-	struct thread *event_thread = create_kernel_thread((kernel_thread_start_routine_t)update_plat, (void *)&clavier);
-	struct thread *screen_thread = create_kernel_thread((kernel_thread_start_routine_t)update_screen, (void *)&monEcran);
-	struct thread *balle_thread = create_kernel_thread((kernel_thread_start_routine_t)update_balle, nullptr);
+	create_kernel_thread((kernel_thread_start_routine_t)update_plat, &clavier);
+	create_kernel_thread((kernel_thread_start_routine_t)update_screen, monEcran);
+	create_kernel_thread((kernel_thread_start_routine_t)update_balle, nullptr);
 
 	thread_yield();
 }

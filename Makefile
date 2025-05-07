@@ -60,7 +60,7 @@ OBJECTSNAMES=\
  op_memoire\
  PortSerie\
  Semaphore Spinlock  sched\
- timer TestAndSet thread PlatformManager vga sprite\
+ timer TestAndSet thread PlatformManager vga sprite ball_sprite\
  Balle BalleManager
 
  

@@ -77,11 +77,13 @@ void clear_vga_screen(char color) {
 }
 
 void plot_square(int x, int y, int size, unsigned char color) {
-    int row, col;
-    for (row = 0; row < size; row++) {
-        int base = (y + row) * 320 + x;
-        for (col = 0; col < size; col++) {
-            video[base + col] = color;
+    for (int row = 0; row < size; row++) {
+        int yy = y + row;
+        if (yy < 0 || yy >= 200) continue; // skip rows outside screen
+        for (int col = 0; col < size; col++) {
+            int xx = x + col;
+            if (xx < 0 || xx >= 320) continue; // skip columns outside screen
+            video[yy * 320 + xx] = color;
         }
     }
 }

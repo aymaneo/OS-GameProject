@@ -1,14 +1,19 @@
 #include "Ecran.h"
 #include <sextant/stdargs.h>
 #include <Applications/PlatformManager.h>
+#include <Applications/BalleManager.h>
+#include "../sextant/vga/ball_sprite.h"
+
 
 // Ici nous allons manipuler un tableau ecran dont on fixe l'origine au d�but de la zone m�moire video.
 
-volatile caseEcran* Ecran::origine = (volatile caseEcran*)VIDEO;
+volatile caseEcran *Ecran::origine = (volatile caseEcran *)VIDEO;
 
-unsigned char Ecran::coderCouleur(Couleur c) {
+unsigned char Ecran::coderCouleur(Couleur c)
+{
 	unsigned char r;
-	switch(c){
+	switch (c)
+	{
 	case NOIR:
 		r = 0;
 		break;
@@ -61,53 +66,66 @@ unsigned char Ecran::coderCouleur(Couleur c) {
 	return r;
 }
 
-unsigned char Ecran::coderAttribut(Couleur prPlan, Couleur arPlan,int clign) {
-	unsigned char paramClignotement ;
+unsigned char Ecran::coderAttribut(Couleur prPlan, Couleur arPlan, int clign)
+{
+	unsigned char paramClignotement;
 
-	if (clign== CLIGN_OUI) paramClignotement=1; else paramClignotement=0;
+	if (clign == CLIGN_OUI)
+		paramClignotement = 1;
+	else
+		paramClignotement = 0;
 
 	unsigned char codePremierPlan = coderCouleur(prPlan);
 	unsigned char codeArrierePlan = coderCouleur(arPlan);
-	return ( codePremierPlan | (codeArrierePlan << 4) | (paramClignotement << 7));
+	return (codePremierPlan | (codeArrierePlan << 4) | (paramClignotement << 7));
 }
 
-unsigned char Ecran::coderAttribut(Couleur prPlan, Couleur arPlan) {
-	unsigned char paramClignotement = 0 ;
+unsigned char Ecran::coderAttribut(Couleur prPlan, Couleur arPlan)
+{
+	unsigned char paramClignotement = 0;
 
 	unsigned char codePremierPlan = coderCouleur(prPlan);
 	unsigned char codeArrierePlan = coderCouleur(arPlan);
-	return ( codePremierPlan | (codeArrierePlan << 4) | (paramClignotement << 7));
+	return (codePremierPlan | (codeArrierePlan << 4) | (paramClignotement << 7));
 }
 
 // Les accesseurs
-int Ecran::getLigne(){
+int Ecran::getLigne()
+{
 	return ligne;
 }
 
-int Ecran::getColonne(){
+int Ecran::getColonne()
+{
 	return colonne;
 }
 
-void Ecran::setLigne(int i){
-	 ligne=i;
+void Ecran::setLigne(int i)
+{
+	ligne = i;
 }
 
-void Ecran::setColonne(int i){
-	 colonne=i;
+void Ecran::setColonne(int i)
+{
+	colonne = i;
 }
 
-int Ecran::positionCourrante(){
+int Ecran::positionCourrante()
+{
 	return getLigne() * COLONNES + getColonne();
 }
 
-void Ecran::avancerPositionCourrante(){
+void Ecran::avancerPositionCourrante()
+{
 	int c = getColonne();
 	int l = getLigne();
-	c=c+1;
-	if(c >=COLONNES){//hors de l'�cran, trop � droite
+	c = c + 1;
+	if (c >= COLONNES)
+	{ // hors de l'�cran, trop � droite
 		c = 0;
 		l++;
-		if(l>=LIGNES){//hors de l'�cran, trop bas
+		if (l >= LIGNES)
+		{ // hors de l'�cran, trop bas
 			defilement(1);
 			l--;
 		}
@@ -116,29 +134,32 @@ void Ecran::avancerPositionCourrante(){
 	setLigne(l);
 }
 
-void Ecran::sautDeLigne(){
+void Ecran::sautDeLigne()
+{
 	int c = getColonne();
 	int l = getLigne();
 
-	c=0;
-	l=l+1;
+	c = 0;
+	l = l + 1;
 
-	if(l>=LIGNES){//hors de l'�cran, trop bas
-			defilement(1);
-			l--;
-		}
+	if (l >= LIGNES)
+	{ // hors de l'�cran, trop bas
+		defilement(1);
+		l--;
+	}
 	setColonne(c);
 	setLigne(l);
 }
 
-
 // Partie fonctionnelle
 
 // Efface l'ecran avec pour couleur de fond arPlan
-void Ecran::effacerEcran(Couleur arPlan) {
+void Ecran::effacerEcran(Couleur arPlan)
+{
 	arrierePlan = arPlan;
 	unsigned char attribut = coderAttribut(arrierePlan, arrierePlan);
-	for(int i = 0 ; i < LIGNES*COLONNES ; i++){
+	for (int i = 0; i < LIGNES * COLONNES; i++)
+	{
 		origine[i].caractere = 0;
 		origine[i].couleurs = attribut;
 		setLigne(0);
@@ -147,18 +168,21 @@ void Ecran::effacerEcran(Couleur arPlan) {
 }
 
 // Affiche un Caractere a la position courrante
-void Ecran::afficherCaractere(Couleur prPlan,Couleur arPlan,const char caractere) {
+void Ecran::afficherCaractere(Couleur prPlan, Couleur arPlan, const char caractere)
+{
 
-	afficherCaractere(getLigne(),getColonne(), prPlan, arPlan, caractere);
+	afficherCaractere(getLigne(), getColonne(), prPlan, arPlan, caractere);
 	avancerPositionCourrante();
 }
 
 // Affiche un Caractere a la position donn�e en parametre (l,c)
-void Ecran::afficherCaractere(int l,int c,Couleur prPlan,Couleur arPlan,const char caractere) {
+void Ecran::afficherCaractere(int l, int c, Couleur prPlan, Couleur arPlan, const char caractere)
+{
 	unsigned char attribut = coderAttribut(prPlan, arPlan);
 
-	//Si en dehors de l'�cran, ne rien faire
-	if ((c >=COLONNES) || (l >= LIGNES)) return;
+	// Si en dehors de l'�cran, ne rien faire
+	if ((c >= COLONNES) || (l >= LIGNES))
+		return;
 
 	int position = l * COLONNES + c; // position lineaire relative
 
@@ -167,205 +191,230 @@ void Ecran::afficherCaractere(int l,int c,Couleur prPlan,Couleur arPlan,const ch
 }
 
 // Affiche une chaine de caractere a la position courante
-void Ecran::afficherMot(int l,int c,const char *mot,Couleur prPlan) {
+void Ecran::afficherMot(int l, int c, const char *mot, Couleur prPlan)
+{
 
 	setLigne(l);
 	setColonne(c);
-	afficherMot(mot,prPlan);
+	afficherMot(mot, prPlan);
 }
 
-void Ecran::afficherMot(const char *mot,Couleur prPlan) {
-	int i=0;
+void Ecran::afficherMot(const char *mot, Couleur prPlan)
+{
+	int i = 0;
 
-	while(mot[i]!='\0'){ // '\0' : caract�re de fin
-		if(mot[i] == '\n'){ // '\n' : passage � la ligne
+	while (mot[i] != '\0')
+	{ // '\0' : caract�re de fin
+		if (mot[i] == '\n')
+		{ // '\n' : passage � la ligne
 			sautDeLigne();
-		}else
-			afficherCaractere(prPlan,arrierePlan, mot[i]);
+		}
+		else
+			afficherCaractere(prPlan, arrierePlan, mot[i]);
 		i++;
 	}
-	//afficherCurseur();
+	// afficherCurseur();
 }
 
 // Affiche le curseur (mais la postion courante ne change pas)
-void Ecran::afficherCurseur(){
+void Ecran::afficherCurseur()
+{
 	int position = positionCourrante();
 
-	unsigned char attribut = coderAttribut(BLANC, arrierePlan,CLIGN_OUI);
+	unsigned char attribut = coderAttribut(BLANC, arrierePlan, CLIGN_OUI);
 	origine[position].caractere = CURSEUR;
 	origine[position].couleurs = attribut;
-
 }
 
 // gere le d�filement de nline d'un coup. les nouvelles lignes ont pour fond la couler de fond courante
-void Ecran::defilement(int nline) {
-	int i,j;
+void Ecran::defilement(int nline)
+{
+	int i, j;
 
-	for(i=0;i<LIGNES;i++)
-		for(j=0;j<COLONNES;j++)
-			if(i+nline<LIGNES) {
-				origine[(i*COLONNES)+j].caractere = origine[((i + nline)* COLONNES) + j].caractere;
-				origine[(i*COLONNES)+j].couleurs = origine[((i + nline)* COLONNES) + j].couleurs;
+	for (i = 0; i < LIGNES; i++)
+		for (j = 0; j < COLONNES; j++)
+			if (i + nline < LIGNES)
+			{
+				origine[(i * COLONNES) + j].caractere = origine[((i + nline) * COLONNES) + j].caractere;
+				origine[(i * COLONNES) + j].couleurs = origine[((i + nline) * COLONNES) + j].couleurs;
 			}
-			else {
-				origine[(i*COLONNES)+j].caractere = 0;
-				origine[(i*COLONNES)+j].couleurs = arrierePlan;
+			else
+			{
+				origine[(i * COLONNES) + j].caractere = 0;
+				origine[(i * COLONNES) + j].couleurs = arrierePlan;
 			}
 }
 
-void Ecran::afficherChiffre(int l,int c, const int valeur){
-		static const char num[] = {'0','1','2','3','4','5','6','7','8','9'};
-        int i,j;
-        char resultat[40];
-        char chaine[36];
-        int reste;
-        int count=0;
-        int quotient=valeur;
+void Ecran::afficherChiffre(int l, int c, const int valeur)
+{
+	static const char num[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+	int i, j;
+	char resultat[40];
+	char chaine[36];
+	int reste;
+	int count = 0;
+	int quotient = valeur;
 
-        if(quotient<0) quotient=-quotient;
+	if (quotient < 0)
+		quotient = -quotient;
 
-        chaine[0]='0';
+	chaine[0] = '0';
 
-        if(quotient==0) count++;
+	if (quotient == 0)
+		count++;
 
-		while (quotient!=0){
-			 reste = quotient % 10 ;
-			 // pour passer chiffre suivant
-			 quotient = (int) quotient/10;
-			 // conversion du chiffre en caractere
-			 chaine[count]=(char) num[reste];
-			 count=count+1;
-		 }
+	while (quotient != 0)
+	{
+		reste = quotient % 10;
+		// pour passer chiffre suivant
+		quotient = (int)quotient / 10;
+		// conversion du chiffre en caractere
+		chaine[count] = (char)num[reste];
+		count = count + 1;
+	}
 
-		// ajout du signe si valeur est n�gative
-		 if (valeur<0){
-			 chaine[count]='-';
-			 count=count+1;
-		 }
+	// ajout du signe si valeur est n�gative
+	if (valeur < 0)
+	{
+		chaine[count] = '-';
+		count = count + 1;
+	}
 
-		 for(i = 0, j=count-1 ; i< count ;i++, j--){
-			 resultat[j]=chaine[i];
-		 }
+	for (i = 0, j = count - 1; i < count; i++, j--)
+	{
+		resultat[j] = chaine[i];
+	}
 
-		 // ajout du caract�re de fin de chaine */
-		 resultat[count]='\0';
+	// ajout du caract�re de fin de chaine */
+	resultat[count] = '\0';
 
-		afficherMot(l,c,resultat, BLANC);
+	afficherMot(l, c, resultat, BLANC);
 }
 
-void Ecran::afficherChiffre( const int valeur){
-	afficherChiffre(getLigne(),getColonne(), valeur);
-
+void Ecran::afficherChiffre(const int valeur)
+{
+	afficherChiffre(getLigne(), getColonne(), valeur);
 }
 
-void Ecran::afficherBase(unsigned int entier,int base,Couleur prPlan) {
-	int pret[9],compt;
+void Ecran::afficherBase(unsigned int entier, int base, Couleur prPlan)
+{
+	int pret[9], compt;
 	unsigned int nb;
-	if(entier == 0)
-		afficherCaractere(ligne,colonne,prPlan,NOIR,48);
+	if (entier == 0)
+		afficherCaractere(ligne, colonne, prPlan, NOIR, 48);
+	else if (entier == 0x0FFFFFF8)
+		afficherMot("Fin de cluster\n");
+	else if (entier > 999999999)
+		afficherMot("Entier trop grand\n");
 	else
-		if(entier == 0x0FFFFFF8)
-			afficherMot("Fin de cluster\n");
-		else
-			if(entier > 999999999)
-				afficherMot("Entier trop grand\n");
-			else {
-				for(int i=0;i<9;i++)
-					pret[i] = -1;
-				for(nb=base,compt=0;entier >= nb; nb*=base,compt++);
-				while(compt >= 0){
-					nb /= base;
-					pret[compt] = entier / nb;
-					entier = entier - pret[compt] * nb;
-					compt--;
+	{
+		for (int i = 0; i < 9; i++)
+			pret[i] = -1;
+		for (nb = base, compt = 0; entier >= nb; nb *= base, compt++)
+			;
+		while (compt >= 0)
+		{
+			nb /= base;
+			pret[compt] = entier / nb;
+			entier = entier - pret[compt] * nb;
+			compt--;
+		}
+		for (int i = 8; i >= 0; i--)
+			if (pret[i] >= 0)
+			{
+				switch (pret[i])
+				{
+				case 10:
+					afficherCaractere(ligne, colonne, prPlan, NOIR, 'a');
+					break;
+				case 11:
+					afficherCaractere(ligne, colonne, prPlan, NOIR, 'b');
+					break;
+				case 12:
+					afficherCaractere(ligne, colonne, prPlan, NOIR, 'c');
+					break;
+				case 13:
+					afficherCaractere(ligne, colonne, prPlan, NOIR, 'd');
+					break;
+				case 14:
+					afficherCaractere(ligne, colonne, prPlan, NOIR, 'e');
+					break;
+				case 15:
+					afficherCaractere(ligne, colonne, prPlan, NOIR, 'f');
+					break;
+				default:
+					afficherCaractere(ligne, colonne, prPlan, NOIR, pret[i] + 48);
 				}
-				for(int i=8;i>=0;i--)
-					if(pret[i]>=0){
-						switch(pret[i]) {
-						case 10 :
-							afficherCaractere(ligne,colonne,prPlan,NOIR,'a');
-							break;
-						case 11 :
-							afficherCaractere(ligne,colonne,prPlan,NOIR,'b');
-							break;
-						case 12 :
-							afficherCaractere(ligne,colonne,prPlan,NOIR,'c');
-							break;
-						case 13 :
-							afficherCaractere(ligne,colonne,prPlan,NOIR,'d');
-							break;
-						case 14 :
-							afficherCaractere(ligne,colonne,prPlan,NOIR,'e');
-							break;
-						case 15 :
-							afficherCaractere(ligne,colonne,prPlan,NOIR,'f');
-							break;
-						default :
-							afficherCaractere(ligne,colonne,prPlan,NOIR,pret[i]+48);
-						}
-					colonne=colonne+1;
-					}
-				}
+				colonne = colonne + 1;
+			}
+	}
 }
 
-void Ecran::miniprintf(char *fmt, ...) {
-  va_list ap;
-  char *p;
-  int ival;
-//  double dval;
-  char c;
-  char *s;
+void Ecran::miniprintf(char *fmt, ...)
+{
+	va_list ap;
+	char *p;
+	int ival;
+	//  double dval;
+	char c;
+	char *s;
 
-  va_start(ap, fmt);
-  for (p = fmt; *p; p++) {
-    if (*p != '%') {
-		if(*p == '\n')
-			sautDeLigne();
-		else afficherCaractere(BLANC,NOIR,*p);
-      continue;
-    }
-    switch (*++p) {
-    case 'd':
-      ival = va_arg(ap, int);
-      afficherChiffre(ival);
-      break;
-    case 'c' :
-        c = va_arg(ap, int);
-       afficherCaractere( BLANC,NOIR,c );
-       break;
-    case 's' :
-    	s = va_arg(ap, char *);
-        for ( ; *s != '\0'; s++ )
-        	afficherCaractere( BLANC,NOIR,*s );
-               break;
-    default:
-      break;
-    }
-  }
-  va_end(ap);
+	va_start(ap, fmt);
+	for (p = fmt; *p; p++)
+	{
+		if (*p != '%')
+		{
+			if (*p == '\n')
+				sautDeLigne();
+			else
+				afficherCaractere(BLANC, NOIR, *p);
+			continue;
+		}
+		switch (*++p)
+		{
+		case 'd':
+			ival = va_arg(ap, int);
+			afficherChiffre(ival);
+			break;
+		case 'c':
+			c = va_arg(ap, int);
+			afficherCaractere(BLANC, NOIR, c);
+			break;
+		case 's':
+			s = va_arg(ap, char *);
+			for (; *s != '\0'; s++)
+				afficherCaractere(BLANC, NOIR, *s);
+			break;
+		default:
+			break;
+		}
+	}
+	va_end(ap);
 }
 
-void Ecran::renderScene(){
+void Ecran::renderScene()
+{
 	clear_vga_screen(0);
-	
+
 	// print walls
-	for (size_t i = 0; i < 200; i++){
+	for (size_t i = 0; i < 200; i++)
+	{
 		plot_square(0, i, 1, 255);
-		plot_square(320-1, i, 1, 255);
+		plot_square(320 - 1, i, 1, 255);
 	}
 
 	// print platforms
-	PlatformManager& manager = PlatformManager::getInstance();
-    Platform& p1 = manager.getPlatform1();
-	draw_sprite(sprite_data,
-					SPRITE_WIDTH, SPRITE_HEIGHT,
-						p1.x, p1.y);
-	
-	Platform& p2 = manager.getPlatform2();
-	draw_sprite(sprite_data,
-				SPRITE_WIDTH, SPRITE_HEIGHT,
+	PlatformManager &manager = PlatformManager::getInstance();
+	Platform &p1 = manager.getPlatform1();
+	draw_sprite(ball_sprite_data,
+				BALL_SPRITE_WIDTH, BALL_SPRITE_HEIGHT,
+				p1.x, p1.y);
+
+	Platform &p2 = manager.getPlatform2();
+	draw_sprite(ball_sprite_data,
+				BALL_SPRITE_WIDTH, BALL_SPRITE_HEIGHT,
 				p2.x, p2.y);
-	
-	
-	
+
+	// Draw a test ball sprite next to the first platform
+	draw_sprite(ball_sprite_data, BALL_SPRITE_WIDTH, BALL_SPRITE_HEIGHT, p1.x + SPRITE_WIDTH + 5, p1.y + SPRITE_HEIGHT / 2);
 }
