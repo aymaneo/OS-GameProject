@@ -25,10 +25,10 @@ BallManager::~BallManager() {
     delete instance;
 }
 
-bool BallManager::addBall(int x, int y) {
+bool BallManager::addBall(int x, int y, int dx = 0, int dy = -1) {
     //TODO should add to the first null value
     if (ballCount >= MAX_BALLS) return false;
-    balls[ballCount++] = new Ball(x, y);
+    balls[ballCount++] = new Ball(x, y, dx, dy);
     return true;
 }
 

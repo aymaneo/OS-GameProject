@@ -20,6 +20,7 @@
 #include "thread.h"
 
 
+
 /**
  * The identifier of the thread currently running on CPU.
  *
@@ -45,9 +46,28 @@ extern "C" {
 static struct thread thread_list[MAX_THREAD];
 stack_t thread_stack[MAX_THREAD];
 
-void sched_clk(int intid) {
-   thread_yield();
+static volatile unsigned long long system_ticks = 0;
+
+void thread_check_sleeping() {
+    for (int i = 0; i < MAX_THREAD; ++i) {
+        if (thread_list[i].state == THR_BLOCKED &&
+            thread_list[i].wakeup_tick != 0 &&
+            system_ticks >= thread_list[i].wakeup_tick) {
+                
+            thread_list[i].wakeup_tick = 0;
+            thread_list[i].state = THR_READY;
+            sched_set_ready(&thread_list[i]);
+        }
+    }
 }
+
+void sched_clk(int intid) {
+	system_ticks++;  // Called every timer interrupt (e.g., 1 ms)
+    // Wake up sleeping threads here (step 3)
+    thread_check_sleeping();
+    thread_yield();
+}
+
 
 struct thread *thread_get_current(){
 	(current_thread->state == THR_RUNNING);
@@ -188,6 +208,13 @@ sextant_ret_t thread_wait() {
 	sextant_ret_t retval;
 	retval = switch_to_next_thread(WAIT_MYSELF);
 	return retval;
+}
+
+sextant_ret_t thread_sleep(unsigned long long milliseconds) {
+    struct thread* myself = thread_get_current();
+    myself->wakeup_tick = system_ticks + milliseconds;
+    switch_to_next_thread(BLOCK_MYSELF); 
+	return SEXTANT_OK;
 }
 
 /**

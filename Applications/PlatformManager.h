@@ -16,7 +16,7 @@ private:
     Platform platform2;
 
 
-    PlatformManager() : platform1(100, 100), platform2(50, 50) {}
+    PlatformManager() : platform1(100, 100), platform2(50, 150) {}
 
 public:
     const unsigned char sprite[PLATFORM_WIDTH*PLATFORM_HEIGHT] = 

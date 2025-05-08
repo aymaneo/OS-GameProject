@@ -29,7 +29,7 @@ public:
     ~BallManager();
 
     Ball* getBall(int index);
-    bool addBall(int x, int y);  
+    bool addBall(int x, int y, int dx, int dy);  
     int getBallCount() const;
     void getAllBalls(Ball **outArray, int maxSize, int &outCount);
 };

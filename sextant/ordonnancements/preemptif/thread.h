@@ -99,6 +99,7 @@ struct thread
   /* Kernel stack parameters */
   vaddr_t kernel_stack_base_addr;
   size_t  kernel_stack_size;
+  unsigned long long wakeup_tick;
 
   /* Data specific to each state */
   union
@@ -167,7 +168,7 @@ typedef unsigned char sched_priority_t;
 sextant_ret_t thread_yield();
 void sleep_timeout(struct sos_timeout_action*);
 sextant_ret_t thread_force_unblock(struct thread *);
-sextant_ret_t thread_sleep(struct time *);
+sextant_ret_t thread_sleep(unsigned long long milliseconds);
 
 void sched_clk(int intid);
 sextant_ret_t thread_wait();

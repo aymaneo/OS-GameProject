@@ -88,21 +88,35 @@ void update_plat(void* arg) {
 
 void update_screen(void* arg) {
     Ecran* screen = static_cast<Ecran*>(arg);
+	
     while (true) {
 		screen->renderScene();
-        thread_yield();
+		for (size_t i = 0; i < 100; i++){
+			thread_yield();
+		}
+        
     }
 }
 
-void spawnBalls(void* arg){
+void moveBall(void* arg){
+	Ball* ball = static_cast<Ball*>(arg);
 	while (true){
-		
-		Platform plat = PlatformManager::getInstance().getPlatform1();
-		BallManager::getInstance().addBall(plat.x, plat.y + BALL_HEIGHT, 1, -1);
-		thread_yield();
+		ball->move();
 	}
-	
 }
+
+void spawnBalls(void* arg){
+	//BallManager bmn = BallManager::getInstance();
+	Platform plat = PlatformManager::getInstance().getPlatform1();
+	while (true){	
+		BallManager::getInstance().getBall(BallManager::getInstance().getBallCount()-1)->move();
+		for (size_t i = 0; i < 10; i++){
+			thread_yield();
+		}
+	}
+}
+
+
 
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
@@ -110,7 +124,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	
 	PlatformManager& manager = PlatformManager::getInstance();
 	BallManager& bm = BallManager::getInstance();
-	
+	bm.addBall(manager.getPlatform1().x, manager.getPlatform1().y - BALL_HEIGHT, 1 , -1);
 	
 
 	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
