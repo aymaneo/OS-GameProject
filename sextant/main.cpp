@@ -23,6 +23,7 @@
 #include <sextant/vga/sprite.h>
 #include "Synchronisation/Mutex/Mutex.h"
 #include <Applications/BallManager.h>
+#include <Applications/BrickManager.h>
 
 //#include <Applications/Entity/Entity.h>
 

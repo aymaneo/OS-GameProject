@@ -3,6 +3,8 @@
 #include <Applications/PlatformManager.h>
 #include <Applications/BrickPaginator.h>
 #include <Applications/BallManager.h>
+#include <Applications/BrickManager.h>
+#include <Applications/globals.h>
 
 // Ici nous allons manipuler un tableau ecran dont on fixe l'origine au d�but de la zone m�moire video.
 

@@ -77,6 +77,7 @@ int BrickPaginator::getCurrentPageIndex() const {
 }
 
 void BrickPaginator::drawCurrentPage() {
+    /*
     int lineCount;
     Brick** currentPageBricks = getCurrentPage();
     if (currentPageBricks) {
@@ -87,4 +88,5 @@ void BrickPaginator::drawCurrentPage() {
             } 
         }
     }
+        */
 }
