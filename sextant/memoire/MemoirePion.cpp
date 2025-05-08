@@ -29,8 +29,14 @@ vaddr_t MemoirePion::malloc(size_t nbytes)
 	p=(int*)debut;
 
 	/* Question 3 */
+	*p=nbytes;
+	j=i;
+	i=i+nbytes+4;
 
-	/* ??? */
+	p=p+1;
+	adresse = (void*)p;
+	debut=(void*) i;
+	
 
 
 	if(DEBUG_MEMOIREPION==1) {
@@ -61,7 +67,7 @@ vaddr_t MemoirePion::malloc(size_t nbytes)
 
 sextant_ret_t MemoirePion::freemem(vaddr_t addr, int taille) {
 	/* Question 3 */
-	/* memset(???); */
+	memset((void *) addr,0,taille);
 }
 
 sextant_ret_t MemoirePion::free(vaddr_t addr) {
@@ -70,8 +76,9 @@ sextant_ret_t MemoirePion::free(vaddr_t addr) {
 	p=p-1;
 
 	/* Question 4 */
-	/* ????? */
-	
+
+	memset((void*)p,0,*p+4);
+		
 	if(DEBUG_MEMOIREPION==1) {
 		ec->sautDeLigne();
 		ec->afficherMot("Adresse de debut de free : ");

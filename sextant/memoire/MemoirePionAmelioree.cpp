@@ -29,8 +29,14 @@ vaddr_t MemoirePionAmelioree::malloc(size_t nbytes)
 	p=(int*)debut;
 
 	/* Question 4 */
-	/* ??? */
+	*p=nbytes;
+	j=i;
+	i=i+nbytes+4;
 
+	p=p+1;
+	adresse = (void*)p;
+	debut=(void*) i;
+	
 	if(DEBUG_MEMOIREPIONAMELIOREE==1) {
 		ec->sautDeLigne();
 		ec->afficherMot("Adresse de debut : ");
@@ -64,7 +70,7 @@ sextant_ret_t MemoirePionAmelioree::free(vaddr_t addr) {
 	p=p-1;
 
 	/* Question 4 */
-	/* ????? */
+	memset((void*)p,0,*p+4);
 	
 	if(DEBUG_MEMOIREPIONAMELIOREE==1) {
 		ec->sautDeLigne();

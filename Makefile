@@ -60,7 +60,7 @@ OBJECTSNAMES=\
  op_memoire\
  PortSerie\
  Semaphore Spinlock  sched\
- timer TestAndSet Threads thread PlatformManager vga sprite\
+ timer TestAndSet thread PlatformManager vga sprite BallManager Ball\
  
 
 OBJECTS=$(patsubst %,build/all-o/%.o,$(OBJECTSNAMES))					  		

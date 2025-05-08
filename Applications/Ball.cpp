@@ -3,3 +3,7 @@
 //
 
 #include "Ball.h"
+
+void Ball::move() {
+    x1++;
+}

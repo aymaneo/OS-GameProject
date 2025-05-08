@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef PLATFORMMANAGER_H
+#define PLATFORMMANAGER_H
 #include "Platform.h"
 
 #define PLATFORM_WIDTH  100
@@ -72,3 +74,5 @@ public:
     Platform& getPlatform1();
     Platform& getPlatform2();
 };
+
+#endif

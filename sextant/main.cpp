@@ -22,6 +22,7 @@
 #include <sextant/vga/vga.h>
 #include <sextant/vga/sprite.h>
 #include "Synchronisation/Mutex/Mutex.h"
+#include <Applications/BallManager.h>
 
 //#include <Applications/Entity/Entity.h>
 
@@ -36,13 +37,7 @@ Timer timer;
 //paddr_t kernel_core_base,kernel_core_top;
 unsigned long address;
 
-struct cpu_state *ctxt_hello1;
-struct cpu_state *ctxt_hello2;
-struct cpu_state *ctxt_main;
-vaddr_t hello1_stack, hello2_stack;
-char tab1[4096];
-char tab2[4096];
-char tab[30000];
+
 
 Ecran ecran;
 memoire *InterfaceMemoire;
@@ -102,8 +97,12 @@ void update_screen(void* arg) {
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
 	Sextant_Init();
+	
 	PlatformManager& manager = PlatformManager::getInstance();
+	BallManager& bm = BallManager::getInstance2();
+
 	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
 	struct thread* screen_thread = create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
+	
 	thread_exit();
 }
