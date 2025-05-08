@@ -1,22 +1,22 @@
 #include <Applications/BrickManager.h>
 
-BrickManager* BrickManager::instance = nullptr;
+BrickManager* BrickManager::brick_manager_instance = nullptr;
 
-BrickManager& BrickManager::getInstance() {
-    if (!instance) {
-        instance = new BrickManager();
+BrickManager& BrickManager::getBricKManagerInstance() {
+    if (!brick_manager_instance) {
+        brick_manager_instance = new BrickManager();
     }
 
     for (int i = 0; i < 15; ++i) {
-        instance->bricks[i] = Brick();
-        instance->brickCount ++;
+        brick_manager_instance->bricks[i] = Brick();
+        brick_manager_instance->brickCount ++;
     }
 
-    return *instance;  
+    return *brick_manager_instance;  
 }
 
 BrickManager::~BrickManager() {
-    delete instance;
+    delete brick_manager_instance;
 }
 
 int BrickManager::getBrickCount() {
