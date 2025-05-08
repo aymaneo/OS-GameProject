@@ -5,21 +5,33 @@
 #include "Ball.h"
 #ifndef BALLMANAGER_H
 #define BALLMANAGER_H
+#define MAX_BALLS 20
+#define BALL_WIDTH  8
+#define BALL_HEIGHT 8
 
 class BallManager {
 private:
 
-    static BallManager* instance2;
-    Ball ball1;
-    BallManager() : ball1(130, 130) {}
+    static BallManager* instance;
+    Ball* balls[MAX_BALLS];
+    int ballCount;
+    BallManager();
 
 public:
-    static BallManager& getInstance2();
+  unsigned char ball_sprite[BALL_WIDTH*BALL_HEIGHT] = 
+  {
+      153, 153,   2,   2,   2,   2, 153, 218, 170, 161,  99, 135, 135, 115,   3, 218,
+        2,   5, 135, 170, 170, 151,   5, 144,   2, 115, 153, 153, 153, 153, 115,   2,
+        2,   5, 135, 152, 153, 134,   5, 161,   2, 145, 115, 135, 135, 148,   2,   2,
+      170,   2,   3,   2,   2,   2,  80, 219, 170, 170, 161,   2,   3,  96, 153, 218
+      };
+    static BallManager& getInstance();
     ~BallManager();
 
-    Ball& getBall1();
+    Ball* getBall(int index);
+    bool addBall(int x, int y);  
+    int getBallCount() const;
+    void getAllBalls(Ball **outArray, int maxSize, int &outCount);
 };
-
-
 
 #endif //BALLMANAGER_H

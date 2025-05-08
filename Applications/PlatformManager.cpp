@@ -20,3 +20,4 @@ Platform& PlatformManager::getPlatform1() {
 Platform& PlatformManager::getPlatform2() { 
     return platform2; 
 }
+

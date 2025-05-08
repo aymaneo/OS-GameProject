@@ -99,10 +99,15 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Sextant_Init();
 	
 	PlatformManager& manager = PlatformManager::getInstance();
-	BallManager& bm = BallManager::getInstance2();
+	BallManager& bm = BallManager::getInstance();
+	bm.addBall(180, 80);
+	bm.addBall(80, 180);
+	bm.addBall(180, 180);
+	bm.addBall(80, 80);
 
 	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
 	struct thread* screen_thread = create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
+	
 	
 	thread_exit();
 }

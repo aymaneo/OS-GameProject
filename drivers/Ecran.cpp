@@ -346,12 +346,7 @@ void Ecran::miniprintf(char *fmt, ...) {
   va_end(ap);
 }
 
-unsigned char pitz[8*8] = {
-153, 153,   2,   2,   2,   2, 153, 218, 170, 161,  99, 135, 135, 115,   3, 218,
-  2,   5, 135, 170, 170, 151,   5, 144,   2, 115, 153, 153, 153, 153, 115,   2,
-  2,   5, 135, 152, 153, 134,   5, 161,   2, 145, 115, 135, 135, 148,   2,   2,
-170,   2,   3,   2,   2,   2,  80, 219, 170, 170, 161,   2,   3,  96, 153, 218
-};
+
 
 void Ecran::renderScene(){
 	clear_vga_screen(0);
@@ -366,20 +361,26 @@ void Ecran::renderScene(){
 	PlatformManager& manager = PlatformManager::getInstance();
     Platform& p1 = manager.getPlatform1();
 	draw_sprite(manager.sprite,
-				SPRITE_WIDTH, SPRITE_HEIGHT,
+				PLATFORM_WIDTH, PLATFORM_HEIGHT,
 				p1.x, p1.y);
-	
 	Platform& p2 = manager.getPlatform2();
 	draw_sprite(manager.sprite,
-				SPRITE_WIDTH, SPRITE_HEIGHT,
+				PLATFORM_WIDTH, PLATFORM_HEIGHT,
 				p2.x, p2.y);
 
 	// print ball
-	Ball& bm = BallManager::getInstance2().getBall1();
+	Ball* ballBuffer[MAX_BALLS];  // allocate on the stack
+	int count = 0;
+	BallManager& mb = BallManager::getInstance();
+	mb.getAllBalls(ballBuffer, MAX_BALLS, count);
+	for (int i = 0; i < count; ++i) {
+		Ball* b = ballBuffer[i];
+		draw_sprite(BallManager::getInstance().ball_sprite,
+					BALL_WIDTH, BALL_HEIGHT,
+					b->x1, b->y1);
+	}
 	
-	draw_sprite(pitz,
-				8,8,
-				bm.x1, bm.y1);
+
 	
 	
 	

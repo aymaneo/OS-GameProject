@@ -5,7 +5,7 @@
 #include "Platform.h"
 
 #define PLATFORM_WIDTH  100
-#define PLATFORM_HEIGHT 20
+#define PLATFORM_HEIGHT 7
 
 
 class PlatformManager {

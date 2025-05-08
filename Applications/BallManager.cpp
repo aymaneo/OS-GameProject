@@ -4,19 +4,47 @@
 
 #include "BallManager.h"
 
-BallManager* BallManager::instance2 = nullptr;
-
-BallManager& BallManager::getInstance2() {
-    if (!instance2) {
-        instance2 = new BallManager();
+BallManager* BallManager::instance = nullptr;
+BallManager::BallManager() : ballCount(0) {
+    for (int i = 0; i < MAX_BALLS; ++i) {
+        balls[i] = nullptr;
     }
-    return *instance2;
+
+    addBall(130, 130);
+}
+
+BallManager& BallManager::getInstance() {
+    if (!instance) {
+        instance = new BallManager();
+    }
+    return *instance;
 }
 
 BallManager::~BallManager() {
-    delete instance2;
+    for (int i = 0; i < MAX_BALLS; ++i) {
+        delete balls[i];
+    }
+    delete instance;
 }
 
-Ball& BallManager::getBall1() {
-    return ball1;
+bool BallManager::addBall(int x, int y) {
+    if (ballCount >= MAX_BALLS) return false;
+    balls[ballCount++] = new Ball(x, y);
+    return true;
+}
+
+Ball* BallManager::getBall(int index) {
+    if (index < 0 || index >= ballCount) return nullptr;
+    return balls[index];
+}
+
+int BallManager::getBallCount() const {
+    return ballCount;
+}
+
+void BallManager::getAllBalls(Ball** outArray, int maxSize, int& outCount) {
+    outCount = (ballCount < maxSize) ? ballCount : maxSize;
+    for (int i = 0; i < outCount; ++i) {
+        outArray[i] = balls[i];
+    }
 }
