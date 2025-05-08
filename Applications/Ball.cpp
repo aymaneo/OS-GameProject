@@ -5,5 +5,6 @@
 #include "Ball.h"
 
 void Ball::move() {
-    x1++;
+    x1 += dx;
+    y1 += dy;
 }

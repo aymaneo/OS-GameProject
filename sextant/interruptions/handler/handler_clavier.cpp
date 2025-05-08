@@ -1,7 +1,7 @@
 /*
  * handler_clavier.cpp
  *
- *  Created on: 8 août 2008
+ *  Created on: 8 aoï¿½t 2008
  *      Author: jmenaud
  */
 static int ControlKeys;
@@ -237,4 +237,6 @@ void handler_clavier(int irq) {
 			break;
 		}
 	}
+	// if (modifBuf==true) {semaphoreClavier.V();modifBuf=false;};
+
 }

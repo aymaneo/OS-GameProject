@@ -9,8 +9,6 @@ BallManager::BallManager() : ballCount(0) {
     for (int i = 0; i < MAX_BALLS; ++i) {
         balls[i] = nullptr;
     }
-
-    addBall(130, 130);
 }
 
 BallManager& BallManager::getInstance() {
@@ -28,6 +26,7 @@ BallManager::~BallManager() {
 }
 
 bool BallManager::addBall(int x, int y) {
+    //TODO should add to the first null value
     if (ballCount >= MAX_BALLS) return false;
     balls[ballCount++] = new Ball(x, y);
     return true;

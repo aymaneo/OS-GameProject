@@ -13,6 +13,17 @@ char Clavier::getchar(){
 	modifBuf = false;
 	posBuf = 0;
 	return buf[0];
+	/*
+	semaphoreClavier.P();
+	if (positioncourante<(TAILLE_BUF_CLAVIER-1)) {
+	positioncourante=positioncourante+1;
+	return buf[positioncourante-1];
+	}
+	else {
+	positioncourante=0;
+	return buf[(TAILLE_BUF_CLAVIER-1)];
+	}
+	*/
 }
 
 char* Clavier::getString(){

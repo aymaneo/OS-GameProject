@@ -18,10 +18,10 @@ MemoirePion uneMemoire;
 memoire::memoire(){
 	i=0;
 }
+
 void memoire::memoireaffiche(Ecran *ec){
 	uneMemoire.memoireaffiche(ec);
 }
-
 
 void memoire::mem_setup(void * begin, int size,Ecran *ecran) {
 	uneMemoire.mem_setup(begin, size, ecran);
@@ -46,7 +46,6 @@ memoire* memoire::nouveau(){
 	static memoire InterfaceMemoireIn;
 	return &InterfaceMemoireIn;
 }
-
 
 void* operator new(size_t taille) { return (void*) (*(memoire::nouveau())).malloc(taille);};
 

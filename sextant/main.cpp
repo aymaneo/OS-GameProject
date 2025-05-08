@@ -94,19 +94,28 @@ void update_screen(void* arg) {
     }
 }
 
+void spawnBalls(void* arg){
+	while (true){
+		
+		Platform plat = PlatformManager::getInstance().getPlatform1();
+		BallManager::getInstance().addBall(plat.x, plat.y + BALL_HEIGHT, 1, -1);
+		thread_yield();
+	}
+	
+}
+
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	Clavier clavier;
 	Sextant_Init();
 	
 	PlatformManager& manager = PlatformManager::getInstance();
 	BallManager& bm = BallManager::getInstance();
-	bm.addBall(180, 80);
-	bm.addBall(80, 180);
-	bm.addBall(180, 180);
-	bm.addBall(80, 80);
+	
+	
 
 	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
 	struct thread* screen_thread = create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
+	struct thread* balls_thread = create_kernel_thread((kernel_thread_start_routine_t) spawnBalls, (void*) nullptr);
 	
 	
 	thread_exit();
