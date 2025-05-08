@@ -6,6 +6,8 @@ public:
     int x, y;
     Brick(int x, int y) : x(x), y(y) {};
     Brick() : x(0), y(0) {};
+    bool status;
+    void changeStatus();
     int spriteWidth = SPRITE_WIDTH;
     int spriteHeight = SPRITE_HEIGHT;
     unsigned char sprite[SPRITE_WIDTH*SPRITE_HEIGHT] = {

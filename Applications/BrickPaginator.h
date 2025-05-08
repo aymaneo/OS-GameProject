@@ -10,7 +10,8 @@ private:
     static BrickPaginator* instance;
     Pagination* pagination; 
     int totalLines; 
-    int currentPage; 
+    Brick** currentPage;
+    int currentPageIndex; 
     int linesPerPage; 
 
     BrickPaginator(Pagination* pagination, int linesPerPage) 
