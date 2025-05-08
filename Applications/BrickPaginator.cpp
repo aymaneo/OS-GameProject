@@ -9,7 +9,6 @@ sextant_ret_t BrickPaginator::addBrickLine(Brick* line, int brickCount) {
         return -SEXTANT_ERROR; 
     }
 
-    
     vaddr_t vaddr = pagination->paging_map((paddr_t)line, (vaddr_t)(totalLines * PAGE_SIZE), false, VM_MAP_PROT_WRITE);
     if (vaddr == (vaddr_t)NULL) {
         return -SEXTANT_ERROR; 
@@ -19,15 +18,23 @@ sextant_ret_t BrickPaginator::addBrickLine(Brick* line, int brickCount) {
     return SEXTANT_OK;
 }
 
-Brick* BrickPaginator::getCurrentPage(int& lineCount) {
-    int start = currentPage * linesPerPage;
-    if (start >= totalLines) {
-        lineCount = 0;
-        return nullptr;
+Brick BrickPaginator::getBrick(int x, int y){
+    return Brick(x, y);
+}
+
+Brick* BrickPaginator::getCurrentPage() {
+    int startLine = currentPage * linesPerPage;
+    int endLine = startLine + linesPerPage;
+    if (endLine > totalLines) {
+        endLine = totalLines;
     }
 
-    lineCount = linesPerPage;
-    return (Brick*)(start * PAGE_SIZE);
+    Brick* pageBricks = new Brick[endLine - startLine];
+    for (int i = startLine; i < endLine; ++i) {
+        pageBricks[i - startLine] = getBrick(i % MAX_BRICKS_PER_LINE, i / MAX_BRICKS_PER_LINE);
+    }
+
+    return pageBricks;
 }
 
 void BrickPaginator::nextPage() {
@@ -44,4 +51,14 @@ void BrickPaginator::previousPage() {
 
 int BrickPaginator::getCurrentPageIndex() const {
     return currentPage;
+}
+
+void BrickPaginator::drawCurrentPage() {
+    int lineCount;
+    Brick* currentPageBricks = getCurrentPage();
+    if (currentPageBricks) {
+        for (int i = 0; i < lineCount; ++i) {
+            currentPageBricks[i].draw();
+        }
+    }
 }
