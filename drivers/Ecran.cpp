@@ -1,6 +1,7 @@
 #include "Ecran.h"
 #include <sextant/stdargs.h>
 #include <Applications/PlatformManager.h>
+#include <Applications/BrickPaginator.h>
 #include <Applications/BallManager.h>
 
 // Ici nous allons manipuler un tableau ecran dont on fixe l'origine au d�but de la zone m�moire video.
