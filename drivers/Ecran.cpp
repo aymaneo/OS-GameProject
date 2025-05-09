@@ -349,6 +349,7 @@ void Ecran::miniprintf(char *fmt, ...) {
 
 
 void Ecran::renderScene(){
+	//TODO implement faster vsync + caching, pagination could help there
 	clear_vga_screen(0);
 	
 	// print walls
@@ -385,9 +386,5 @@ void Ecran::renderScene(){
 					BALL_WIDTH, BALL_HEIGHT,
 					b->x1, b->y1);
 	}
-	
 
-	
-	
-	
 }
