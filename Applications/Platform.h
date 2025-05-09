@@ -2,6 +2,8 @@
 
 
 class Platform {
+private:
+    static const int speed = 3;
 public:
     int x;
     int y;

@@ -44,7 +44,10 @@ memoire *InterfaceMemoire;
 Ecran *monEcran = &ecran;
 Semaphore *ballSema; 
 #define PAGINATION_USE 1
-
+#define L_P1 's'
+#define R_P1 'd'
+#define L_P2 'j'
+#define R_P2 'k'
 
 
 void Sextant_Init(){
@@ -66,24 +69,25 @@ void Sextant_Init(){
 	set_palette_vga(palette_vga);
 }
 
-#define L_P1 's'
-#define R_P1 'd'
-#define L_P2 'j'
-#define R_P2 'k'
+
 void update_plat(void* arg) {
     Clavier* keyboard = static_cast<Clavier*>(arg);
     while (true) {
-		char c = keyboard->getchar();
-		if (c == L_P1) {
-            PlatformManager::getInstance().getPlatform1().moveLeft();
-        }else if(c == R_P1) {
-            PlatformManager::getInstance().getPlatform1().moveRight();
-        }else if(c == L_P2) {
-            PlatformManager::getInstance().getPlatform2().moveLeft();
-        }else if (c == R_P2) {
-            PlatformManager::getInstance().getPlatform2().moveRight();
-        }
-        thread_yield();
+		if (keyboard->testChar())  {
+			char c = keyboard->getchar();
+			if (c == L_P1) {
+				PlatformManager::getInstance().getPlatform1().moveLeft();
+			}else if(c == R_P1) {
+				PlatformManager::getInstance().getPlatform1().moveRight();
+			}else if(c == L_P2) {
+				PlatformManager::getInstance().getPlatform2().moveLeft();
+			}else if (c == R_P2) {
+				PlatformManager::getInstance().getPlatform2().moveRight();
+			}
+			
+		}
+		
+		
     }
 }
 
@@ -93,7 +97,7 @@ void update_screen(void* arg) {
 	
     while (true) {
 		screen->renderScene();
-		thread_active_sleep(20);
+		thread_active_sleep(10);
     }
 }
 
@@ -107,8 +111,6 @@ void moveBall(void* arg){
 }
 
 void spawnBalls(void* arg){
-	//BallManager bmn = BallManager::getInstance();
-	Platform plat = PlatformManager::getInstance().getPlatform1();
 	while (true){	
 		ballSema->P();
 		BallManager::getInstance().addBall(
@@ -127,7 +129,7 @@ void update_ennemy_plat(void* arg) {
     Platform* ennemy_plat = static_cast<Platform*>(arg);
     while (true) {
 		ennemy_plat->moveRight();
-		thread_active_sleep(10);
+		thread_active_sleep(40);
 	}
 }
 
@@ -145,10 +147,6 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	struct thread* ennemy_thread = create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) &(manager.getEnnemy_platform()));
 	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
 	struct thread* balls_thread = create_kernel_thread((kernel_thread_start_routine_t) spawnBalls, (void*) nullptr);
-	
-
-
-
-	
+		
 	thread_exit();
 }

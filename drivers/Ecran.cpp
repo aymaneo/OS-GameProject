@@ -348,43 +348,42 @@ void Ecran::miniprintf(char *fmt, ...) {
 
 
 
-void Ecran::renderScene(){
-	//TODO implement faster vsync + caching, pagination could help there
-	clear_vga_screen(0);
-	
-	// print walls
-	for (size_t i = 0; i < 200; i++){
-		plot_square(0, i, 1, 255);
-		plot_square(320-1, i, 1, 255);
-	}
+void Ecran::renderScene() {
+    clear_offscreen_buffer(0);
 
-	// print platforms
-	PlatformManager& manager = PlatformManager::getInstance();
-    Platform& p1 = manager.getPlatform1();
-	draw_sprite(manager.sprite,
-				PLATFORM_WIDTH, PLATFORM_HEIGHT,
-				p1.x, p1.y);
-	Platform& p2 = manager.getPlatform2();
-	draw_sprite(manager.sprite,
-				PLATFORM_WIDTH, PLATFORM_HEIGHT,
-				p2.x, p2.y);
+    // Render walls
+    for (size_t i = 0; i < 200; i++) {
+        plot_square_offscreen(0, i, 1, 255);
+        plot_square_offscreen(320 - 1, i, 1, 255);
+    }
 
-	// print ennemy platform
-	Platform& ep = manager.getEnnemy_platform();
-	draw_sprite(manager.sprite,
-				PLATFORM_WIDTH, PLATFORM_HEIGHT,
-				ep.x, ep.y);
+    // Render platforms
+    draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
+							PLATFORM_WIDTH, PLATFORM_HEIGHT, 
+							PlatformManager::getInstance().getPlatform1().x, 
+							PlatformManager::getInstance().getPlatform1().y);
+    draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
+							PLATFORM_WIDTH, PLATFORM_HEIGHT, 
+							PlatformManager::getInstance().getPlatform2().x, 
+							PlatformManager::getInstance().getPlatform2().y);
 
-	// print ball
-	Ball* ballBuffer[MAX_BALLS];  // allocate on the stack
-	int count = 0;
-	BallManager& mb = BallManager::getInstance();
-	mb.getAllBalls(ballBuffer, MAX_BALLS, count);
-	for (int i = 0; i < count; ++i) {
-		Ball* b = ballBuffer[i];
-		draw_sprite(BallManager::getInstance().ball_sprite,
-					BALL_WIDTH, BALL_HEIGHT,
-					b->x1, b->y1);
-	}
+    // Render enemy platform
+    draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
+							PLATFORM_WIDTH, PLATFORM_HEIGHT, 	
+							PlatformManager::getInstance().getEnnemy_platform().x, 
+							PlatformManager::getInstance().getEnnemy_platform().y);
 
+    // Render balls
+    Ball* ballBuffer[MAX_BALLS];
+    int count = 0;
+    BallManager::getInstance().getAllBalls(ballBuffer, MAX_BALLS, count);
+	Ball* b;
+    for (int i = 0; i < count; ++i) {
+        b = ballBuffer[i];
+        draw_sprite_offscreen(BallManager::getInstance().ball_sprite, 
+		BALL_WIDTH, BALL_HEIGHT, 
+		b->x1, b->y1);
+    }
+
+    copy_offscreen_to_vga();
 }

@@ -17,7 +17,7 @@ private:
     Platform ennemy_platform;
 
 
-    PlatformManager() : platform1(100, 180), platform2(80, 150), ennemy_platform(100, 60) {}
+    PlatformManager() : platform1(80, 165), platform2(100, 180), ennemy_platform(100, 60) {}
 
 public:
     const unsigned char sprite[PLATFORM_WIDTH*PLATFORM_HEIGHT] = 

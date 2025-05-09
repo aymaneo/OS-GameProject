@@ -27,14 +27,13 @@ int Semaphore::Valeur(){
 }
 
 void Semaphore::V(){
-	if (value<0) {
+	if (value>0) value=value+1;
+	else {
 		mySpinlock.Take(&lock);
 		value=value+1;
 		mySpinlock.Release(&lock);
-
 		sched_set_ready(pop_in_waiting_queue(sem_id));
 	}
-	else value=value+1;
 };
 
 

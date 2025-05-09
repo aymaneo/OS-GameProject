@@ -13,7 +13,7 @@ class Ball {
         int dx;
         int dy;
     
-        Ball(int x1, int y1, int dx = 0, int dy = -1)
+        Ball(int x1, int y1, int dx = 1, int dy = -1)
             : x1(x1), y1(y1), dx(dx), dy(dy) {}
     
         void move();

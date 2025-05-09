@@ -1,9 +1,9 @@
 #include "Platform.h"
 
 void Platform::moveLeft() {
-    x--;
+    x = x - speed;
 }
 
 void Platform::moveRight() {
-    x++;
+    x = x + speed;
 }

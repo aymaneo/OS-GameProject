@@ -120,3 +120,37 @@ void draw_sprite(const unsigned char* sprite,
         }
     }
 }
+
+unsigned char offscreen_buffer[320 * 200];
+
+void clear_offscreen_buffer(char color) {
+    for (int i = 0; i < 320 * 200; i++) {
+        offscreen_buffer[i] = color;
+    }
+}
+
+void plot_square_offscreen(int x, int y, int size, unsigned char color) {
+    for (int row = 0; row < size; row++) {
+        int base = (y + row) * 320 + x;
+        for (int col = 0; col < size; col++) {
+            offscreen_buffer[base + col] = color;
+        }
+    }
+}
+
+void draw_sprite_offscreen(const unsigned char* sprite, int w, int h, int dstX, int dstY) {
+    for (int yy = 0; yy < h; ++yy) {
+        for (int xx = 0; xx < w; ++xx) {
+            unsigned char c = sprite[yy * w + xx];
+            if (c != 0) {
+                offscreen_buffer[(yy + dstY) * 320 + (xx + dstX)] = c;
+            }
+        }
+    }
+}
+
+void copy_offscreen_to_vga() {
+    for (int i = 0; i < 320 * 200; i++) {
+        video[i] = offscreen_buffer[i];
+    }
+}
