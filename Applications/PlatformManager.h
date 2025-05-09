@@ -14,9 +14,10 @@ private:
     static PlatformManager* instance;
     Platform platform1;
     Platform platform2;
+    Platform ennemy_platform;
 
 
-    PlatformManager() : platform1(100, 100), platform2(50, 150) {}
+    PlatformManager() : platform1(100, 180), platform2(80, 150), ennemy_platform(100, 60) {}
 
 public:
     const unsigned char sprite[PLATFORM_WIDTH*PLATFORM_HEIGHT] = 
@@ -73,6 +74,7 @@ public:
 
     Platform& getPlatform1();
     Platform& getPlatform2();
+    Platform& getEnnemy_platform();
 };
 
 #endif

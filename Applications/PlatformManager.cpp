@@ -21,3 +21,7 @@ Platform& PlatformManager::getPlatform2() {
     return platform2; 
 }
 
+Platform& PlatformManager::getEnnemy_platform(){
+    return ennemy_platform;
+};
+

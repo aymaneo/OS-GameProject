@@ -217,6 +217,14 @@ sextant_ret_t thread_sleep(unsigned long long milliseconds) {
 	return SEXTANT_OK;
 }
 
+sextant_ret_t thread_active_sleep(unsigned long ticks) {
+    for (size_t i = 0; i < ticks; i++){
+		thread_yield();
+	}
+	
+	return SEXTANT_OK;
+}
+
 /**
  * Internal sleep timeout management
  */

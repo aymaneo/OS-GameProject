@@ -172,7 +172,7 @@ sextant_ret_t thread_sleep(unsigned long long milliseconds);
 
 void sched_clk(int intid);
 sextant_ret_t thread_wait();
-
+sextant_ret_t thread_active_sleep(unsigned long ticks);
 
 
 #endif /* _THREAD_H_ */

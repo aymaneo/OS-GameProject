@@ -368,6 +368,12 @@ void Ecran::renderScene(){
 				PLATFORM_WIDTH, PLATFORM_HEIGHT,
 				p2.x, p2.y);
 
+	// print ennemy platform
+	Platform& ep = manager.getEnnemy_platform();
+	draw_sprite(manager.sprite,
+				PLATFORM_WIDTH, PLATFORM_HEIGHT,
+				ep.x, ep.y);
+
 	// print ball
 	Ball* ballBuffer[MAX_BALLS];  // allocate on the stack
 	int count = 0;
