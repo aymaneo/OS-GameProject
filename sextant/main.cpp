@@ -42,6 +42,7 @@ unsigned long address;
 Ecran ecran;
 memoire *InterfaceMemoire;
 Ecran *monEcran = &ecran;
+Semaphore *ballSema; 
 #define PAGINATION_USE 1
 
 
@@ -92,14 +93,16 @@ void update_screen(void* arg) {
 	
     while (true) {
 		screen->renderScene();
-		thread_active_sleep(10);
+		thread_active_sleep(20);
     }
 }
+
 
 void moveBall(void* arg){
 	Ball* ball = static_cast<Ball*>(arg);
 	while (true){
 		ball->move();
+		thread_active_sleep(10);
 	}
 }
 
@@ -107,10 +110,18 @@ void spawnBalls(void* arg){
 	//BallManager bmn = BallManager::getInstance();
 	Platform plat = PlatformManager::getInstance().getPlatform1();
 	while (true){	
-		BallManager::getInstance().getBall(BallManager::getInstance().getBallCount()-1)->move();
-		thread_active_sleep(10);
+		ballSema->P();
+		BallManager::getInstance().addBall(
+			PlatformManager::getInstance().getPlatform1().x, 
+			PlatformManager::getInstance().getPlatform1().y - BALL_HEIGHT, 
+			1 , -1);
+			struct thread* balls_thread = create_kernel_thread(
+				(kernel_thread_start_routine_t) moveBall, 
+				(void*) BallManager::getInstance().getBall(BallManager::getInstance().getBallCount()-1));
+		thread_active_sleep(5000);
 	}
 }
+
 
 void update_ennemy_plat(void* arg) {
     Platform* ennemy_plat = static_cast<Platform*>(arg);
@@ -127,14 +138,17 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	
 	PlatformManager& manager = PlatformManager::getInstance();
 	BallManager& bm = BallManager::getInstance();
-	bm.addBall(manager.getPlatform1().x, manager.getPlatform1().y - BALL_HEIGHT, 1 , -1);
 
-
+	ballSema = new Semaphore(5);
+	
 	struct thread* screen_thread = create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
 	struct thread* ennemy_thread = create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) &(manager.getEnnemy_platform()));
 	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
 	struct thread* balls_thread = create_kernel_thread((kernel_thread_start_routine_t) spawnBalls, (void*) nullptr);
 	
+
+
+
 	
 	thread_exit();
 }
