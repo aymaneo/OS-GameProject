@@ -141,6 +141,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	
 	PlatformManager& manager = PlatformManager::getInstance();
 	BallManager& bm = BallManager::getInstance();
+	BrickManager& brick_manager = BrickManager::getBricKManagerInstance();
 
 	ballSema = new Semaphore(5);
 	

@@ -13,6 +13,10 @@ void Ball::move() {
     if (!isEnclosedY(y1)) dy = -dy;
     
     //TODO handle collision
+
+    
+
+
     x1 += dx;
     y1 += dy;
 

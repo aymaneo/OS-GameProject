@@ -1,7 +1,6 @@
 #include "Ecran.h"
 #include <sextant/stdargs.h>
 #include <Applications/PlatformManager.h>
-#include <Applications/BrickPaginator.h>
 #include <Applications/BallManager.h>
 #include <Applications/BrickManager.h>
 #include <Applications/globals.h>
@@ -375,6 +374,19 @@ void Ecran::renderScene() {
 							PLATFORM_WIDTH, PLATFORM_HEIGHT, 	
 							PlatformManager::getInstance().getEnnemy_platform().x, 
 							PlatformManager::getInstance().getEnnemy_platform().y);
+
+	
+	// Render bricks
+	BrickManager brickManager = BrickManager::getBricKManagerInstance();
+	Brick* bricks = brickManager.bricks;
+	int brickCount = brickManager.getBrickCount();
+	for (int i = 0; i < brickCount; ++i) {
+		if (bricks[i].status) {
+			draw_sprite_offscreen(brickManager.sprite,
+				BRICK_WIDTH, BRICK_HEIGHT,
+				bricks[i].x, bricks[i].y);
+		}
+	}
 
     // Render balls
     Ball* ballBuffer[MAX_BALLS];
