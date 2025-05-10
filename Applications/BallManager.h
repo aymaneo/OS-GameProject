@@ -18,7 +18,7 @@ private:
     Ball* balls[MAX_BALLS];
     int ballCount;
     BallManager();
-    Mutex mumuL[MAX_BALLS];
+    Mutex mutex_liste[MAX_BALLS];
 
 public:
   unsigned char ball_sprite[BALL_WIDTH*BALL_HEIGHT] = 
