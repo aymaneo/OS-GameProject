@@ -2,6 +2,8 @@
 #include <sextant/stdargs.h>
 #include <Applications/PlatformManager.h>
 #include <Applications/BallManager.h>
+#include <Applications/BrickManager.h>
+#include <Applications/globals.h>
 
 // Ici nous allons manipuler un tableau ecran dont on fixe l'origine au d�but de la zone m�moire video.
 
@@ -372,6 +374,16 @@ void Ecran::renderScene() {
 							PLATFORM_WIDTH, PLATFORM_HEIGHT, 	
 							PlatformManager::getInstance().getEnnemy_platform().x, 
 							PlatformManager::getInstance().getEnnemy_platform().y);
+
+	
+	// Render bricks
+	 for (int i = 0; i < BrickManager::getBricKManagerInstance().getBrickCount(); ++i) {
+        if (BrickManager::getBricKManagerInstance().bricks[i].status) {
+            draw_sprite_offscreen(BrickManager::getBricKManagerInstance().sprite,
+                BRICK_WIDTH, BRICK_HEIGHT,
+                BrickManager::getBricKManagerInstance().bricks[i].x, BrickManager::getBricKManagerInstance().bricks[i].y);
+        }
+    }
 
     // Render balls
     Ball* ballBuffer[MAX_BALLS];

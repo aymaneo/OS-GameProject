@@ -61,6 +61,7 @@ OBJECTSNAMES=\
  PortSerie\
  Semaphore Spinlock  sched\
  timer TestAndSet thread PlatformManager vga sprite BallManager Ball\
+ BrickManager Brick\
  
 
 OBJECTS=$(patsubst %,build/all-o/%.o,$(OBJECTSNAMES))					  		

@@ -23,6 +23,7 @@
 #include <sextant/vga/sprite.h>
 #include "Synchronisation/Mutex/Mutex.h"
 #include <Applications/BallManager.h>
+#include <Applications/BrickManager.h>
 
 //#include <Applications/Entity/Entity.h>
 
@@ -140,6 +141,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	
 	PlatformManager& manager = PlatformManager::getInstance();
 	BallManager& bm = BallManager::getInstance();
+	BrickManager& brick_manager = BrickManager::getBricKManagerInstance();
 
 	ballSema = new Semaphore(5);
 	
