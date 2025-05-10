@@ -27,7 +27,7 @@ int Semaphore::Valeur(){
 }
 
 void Semaphore::V(){
-	if (value>0) value=value+1;
+	if (value>=0) value=value+1;
 	else {
 		mySpinlock.Take(&lock);
 		value=value+1;

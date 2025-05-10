@@ -47,3 +47,24 @@ void BallManager::getAllBalls(Ball** outArray, int maxSize, int& outCount) {
         outArray[i] = balls[i];
     }
 }
+
+int BallManager::getX(int index){
+    if (index < 0 || index >= ballCount) return -1;
+    mutex_liste[index].lock();
+    int x = balls[index]->getX();
+    mutex_liste[index].unlock();
+    return x;
+}
+int BallManager::getY(int index){
+    if (index < 0 || index >= ballCount) return -1;
+    mutex_liste[index].lock();
+    int y = balls[index]->getY();
+    mutex_liste[index].unlock();
+    return y;
+}
+void BallManager::move(int index){
+    if (index < 0 || index >= ballCount) return;
+    mutex_liste[index].lock();
+    balls[index]->move();
+    mutex_liste[index].unlock();
+}
