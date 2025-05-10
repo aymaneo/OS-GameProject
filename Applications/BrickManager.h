@@ -18,6 +18,7 @@ class BrickManager {
         static const int brickWidth = BRICK_WIDTH;
         static const int brickHeight = BRICK_HEIGHT; 
         int getBrickCount(); 
+        void generateBricks();
 
         ~BrickManager();
 

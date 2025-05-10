@@ -5,6 +5,8 @@ class Brick{
   public:
     Brick();
     bool status;
+    int x;
+    int y;
     void changeStatus();
 };
 

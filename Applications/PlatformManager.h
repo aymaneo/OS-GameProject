@@ -72,6 +72,9 @@ public:
     static PlatformManager& getInstance();
     ~PlatformManager();
 
+    static const int platformWidth = PLATFORM_WIDTH;
+    static const int platformHeight = PLATFORM_HEIGHT;
+
     Platform& getPlatform1();
     Platform& getPlatform2();
     Platform& getEnnemy_platform();
