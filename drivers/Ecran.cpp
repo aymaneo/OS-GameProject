@@ -377,16 +377,13 @@ void Ecran::renderScene() {
 
 	
 	// Render bricks
-	BrickManager brickManager = BrickManager::getBricKManagerInstance();
-	Brick* bricks = brickManager.bricks;
-	int brickCount = brickManager.getBrickCount();
-	for (int i = 0; i < brickCount; ++i) {
-		if (bricks[i].status) {
-			draw_sprite_offscreen(brickManager.sprite,
-				BRICK_WIDTH, BRICK_HEIGHT,
-				bricks[i].x, bricks[i].y);
-		}
-	}
+	 for (int i = 0; i < BrickManager::getBricKManagerInstance().getBrickCount(); ++i) {
+        if (BrickManager::getBricKManagerInstance().bricks[i].status) {
+            draw_sprite_offscreen(BrickManager::getBricKManagerInstance().sprite,
+                BRICK_WIDTH, BRICK_HEIGHT,
+                BrickManager::getBricKManagerInstance().bricks[i].x, BrickManager::getBricKManagerInstance().bricks[i].y);
+        }
+    }
 
     // Render balls
     Ball* ballBuffer[MAX_BALLS];
