@@ -85,10 +85,7 @@ void update_plat(void* arg) {
 			}else if (c == R_P2) {
 				PlatformManager::getInstance().getPlatform2().moveRight();
 			}
-			
 		}
-		
-		
     }
 }
 

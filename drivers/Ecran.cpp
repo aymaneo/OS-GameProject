@@ -388,7 +388,6 @@ void Ecran::renderScene() {
     Ball* ballBuffer[MAX_BALLS];
     int count = 0;
     BallManager::getInstance().getAllBalls(ballBuffer, MAX_BALLS, count);
-	
     for (int i = 0; i < count; ++i) {
         draw_sprite_offscreen(BallManager::getInstance().ball_sprite, 
 		BALL_WIDTH, BALL_HEIGHT, 

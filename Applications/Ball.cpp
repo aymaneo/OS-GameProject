@@ -17,11 +17,9 @@ void Ball::move() {
 }
 
 int Ball::getX() {
-    int value = x;
-    return value;
+    return x;
 }
 
 int Ball::getY() {
-    int value = y;
-    return value;
+    return y;
 }
