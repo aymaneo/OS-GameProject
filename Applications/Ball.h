@@ -5,20 +5,23 @@
 #ifndef BALL_H
 #define BALL_H
 
+#include <sextant/Synchronisation/Mutex/Mutex.h>
 
 class Ball {
-    public:
-        int x1;
-        int y1;
-        int dx;
-        int dy;
-    
-        Ball(int x1, int y1, int dx = 1, int dy = -1)
-            : x1(x1), y1(y1), dx(dx), dy(dy) {}
-    
-        void move();
-    };
-    
+private:
+    int x;
+    int y;
+    int dx;
+    int dy;
+
+public:
+    Ball(int x, int y, int dx = 1, int dy = -1)
+        : x(x), y(y), dx(dx), dy(dy) {}
+
+    void move();
+    int getX();
+    int getY();
+};
 
 
 #endif //BALL_H

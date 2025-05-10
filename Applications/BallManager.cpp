@@ -47,3 +47,24 @@ void BallManager::getAllBalls(Ball** outArray, int maxSize, int& outCount) {
         outArray[i] = balls[i];
     }
 }
+
+int BallManager::getX(int index){
+    if (index < 0 || index >= ballCount) return -1;
+    mumuL[index].lock();
+    int x = balls[index]->getX();
+    mumuL[index].unlock();
+    return x;
+}
+int BallManager::getY(int index){
+    if (index < 0 || index >= ballCount) return -1;
+    mumuL[index].lock();
+    int y = balls[index]->getY();
+    mumuL[index].unlock();
+    return y;
+}
+void BallManager::move(int index){
+    if (index < 0 || index >= ballCount) return;
+    mumuL[index].lock();
+    balls[index]->move();
+    mumuL[index].unlock();
+}

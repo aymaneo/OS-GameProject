@@ -8,13 +8,11 @@
 #include "Mutex.h"
 
 
-Mutex::Mutex(){
-	Semaphore(1);
-};
+Mutex::Mutex() : Semaphore(1){};
 
 void Mutex::lock(){
-	lActivite = thread_get_current();
 	P();
+	lActivite = thread_get_current();
 };
 
 sextant_ret_t Mutex::unlock(){

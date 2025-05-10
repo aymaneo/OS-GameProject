@@ -349,7 +349,6 @@ void Ecran::miniprintf(char *fmt, ...) {
 }
 
 
-
 void Ecran::renderScene() {
     clear_offscreen_buffer(0);
 
@@ -389,13 +388,11 @@ void Ecran::renderScene() {
     Ball* ballBuffer[MAX_BALLS];
     int count = 0;
     BallManager::getInstance().getAllBalls(ballBuffer, MAX_BALLS, count);
-	Ball* b;
+	
     for (int i = 0; i < count; ++i) {
-        b = ballBuffer[i];
         draw_sprite_offscreen(BallManager::getInstance().ball_sprite, 
 		BALL_WIDTH, BALL_HEIGHT, 
-		b->x1, b->y1);
+		BallManager::getInstance().getX(i), BallManager::getInstance().getY(i));
     }
-
     copy_offscreen_to_vga();
 }

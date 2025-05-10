@@ -3,11 +3,13 @@
 //
 
 #include "Ball.h"
+#include <sextant/Synchronisation/Mutex/Mutex.h>
 #ifndef BALLMANAGER_H
 #define BALLMANAGER_H
 #define MAX_BALLS 20
 #define BALL_WIDTH  8
 #define BALL_HEIGHT 8
+
 
 class BallManager {
 private:
@@ -16,6 +18,7 @@ private:
     Ball* balls[MAX_BALLS];
     int ballCount;
     BallManager();
+    Mutex mumuL[MAX_BALLS];
 
 public:
   unsigned char ball_sprite[BALL_WIDTH*BALL_HEIGHT] = 
@@ -32,6 +35,11 @@ public:
     bool addBall(int x, int y, int dx, int dy);  
     int getBallCount() const;
     void getAllBalls(Ball **outArray, int maxSize, int &outCount);
+    void removeBall(int index);
+    void moveBall(int index);
+    int getX(int index);
+    int getY(int index);
+    void move(int index);
 };
 
 #endif //BALLMANAGER_H
