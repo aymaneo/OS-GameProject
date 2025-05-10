@@ -3,5 +3,5 @@
 Brick::Brick() : status(true) {}
 
 void Brick::changeStatus() {
-    status = !status;
+    status = false;
 }
