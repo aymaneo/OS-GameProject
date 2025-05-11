@@ -4,8 +4,9 @@
 
 #ifndef BALL_H
 #define BALL_H
-
+#include "CollisionManager.h"
 #include <sextant/Synchronisation/Mutex/Mutex.h>
+
 
 class Ball {
 private:

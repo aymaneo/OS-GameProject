@@ -2,7 +2,7 @@
 
 BrickManager* BrickManager::brick_manager_instance = nullptr;
 
-BrickManager& BrickManager::getBricKManagerInstance() {
+BrickManager& BrickManager::getInstance() {
     if (!brick_manager_instance) {
         brick_manager_instance = new BrickManager();
     }

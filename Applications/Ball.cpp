@@ -3,15 +3,18 @@
 //
 
 #include "Ball.h"
+
+#include "BallManager.h"
+
 void Ball::move() {
-    auto isEnclosedX = [](int x1) -> bool  {return (x1 > 1 && x1 < 319);};
-    auto isEnclosedY = [](int y1) -> bool  {return (y1 > 1 && y1 < 199);};
-        
+    int ctr_x = getX() + BALL_WIDTH/2;
+    int ctr_y = getY() + BALL_HEIGHT/2;
+    if (CollisionManager::isColliding(ctr_x + dx, ctr_y + dy)) {
+        if(CollisionManager::isColliding(ctr_x + dx, ctr_y)) dx = -dx;
+        if(CollisionManager::isColliding(ctr_x, ctr_y + dy)) dy = -dy;
+        // Act now to apply the collision, if it collides on both x and y
+    }
     
-    if (!isEnclosedX(getX())) dx = -dx;
-    if (!isEnclosedY(getY())) dy = -dy;
-    
-    //TODO handle collision
     x += dx;
     y += dy;
 }

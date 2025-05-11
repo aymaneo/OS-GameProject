@@ -104,20 +104,25 @@ void moveBall(void* arg){
 	Ball* ball = static_cast<Ball*>(arg);
 	while (true){
 		ball->move();
+		if (ball->getY() > 195) {
+            BallManager::getInstance().removeBall(ball); 
+			ballSema->V();
+			thread_exit();
+            break; 
+        }
 		thread_active_sleep(10);
 	}
 }
 
 void spawnBalls(void* arg){
-	while (true){	
+	while (true){
 		ballSema->P();
 		BallManager::getInstance().addBall(
-			PlatformManager::getInstance().getPlatform1().x, 
+			PlatformManager::getInstance().getPlatform1().x + PLATFORM_WIDTH/2,
 			PlatformManager::getInstance().getPlatform1().y - BALL_HEIGHT, 
 			1 , -1);
-			struct thread* balls_thread = create_kernel_thread(
-				(kernel_thread_start_routine_t) moveBall, 
-				(void*) BallManager::getInstance().getBall(BallManager::getInstance().getBallCount()-1));
+		create_kernel_thread((kernel_thread_start_routine_t) moveBall, 
+							(void*) BallManager::getInstance().getBall(BallManager::getInstance().getBallCount()-1));
 		thread_active_sleep(5000);
 	}
 }
@@ -138,9 +143,9 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	
 	PlatformManager& manager = PlatformManager::getInstance();
 	BallManager& bm = BallManager::getInstance();
-	BrickManager& brick_manager = BrickManager::getBricKManagerInstance();
+	BrickManager& brick_manager = BrickManager::getInstance();
 
-	ballSema = new Semaphore(5);
+	ballSema = new Semaphore(3);
 	
 	struct thread* screen_thread = create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
 	struct thread* ennemy_thread = create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) &(manager.getEnnemy_platform()));

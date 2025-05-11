@@ -12,9 +12,9 @@ class BrickManager {
 
         BrickManager() : brickCount(0) {};
     public:
-        Brick bricks[15];
-        static const int bricksPerLine = 5;
-        static BrickManager& getBricKManagerInstance(); 
+        Brick bricks[3*8];
+        static const int bricksPerLine = 8;
+        static BrickManager& getInstance(); 
         static const int brickWidth = BRICK_WIDTH;
         static const int brickHeight = BRICK_HEIGHT; 
         int getBrickCount(); 

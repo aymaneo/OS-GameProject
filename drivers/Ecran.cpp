@@ -376,11 +376,11 @@ void Ecran::renderScene() {
 
 	
 	// Render bricks
-	 for (int i = 0; i < BrickManager::getBricKManagerInstance().getBrickCount(); ++i) {
-        if (BrickManager::getBricKManagerInstance().bricks[i].status) {
-            draw_sprite_offscreen(BrickManager::getBricKManagerInstance().sprite,
+	 for (int i = 0; i < BrickManager::getInstance().getBrickCount(); ++i) {
+        if (BrickManager::getInstance().bricks[i].status) {
+            draw_sprite_offscreen(BrickManager::getInstance().sprite,
                 BRICK_WIDTH, BRICK_HEIGHT,
-                BrickManager::getBricKManagerInstance().bricks[i].x, BrickManager::getBricKManagerInstance().bricks[i].y);
+                BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y);
         }
     }
 
@@ -389,9 +389,17 @@ void Ecran::renderScene() {
     int count = 0;
     BallManager::getInstance().getAllBalls(ballBuffer, MAX_BALLS, count);
     for (int i = 0; i < count; ++i) {
-        draw_sprite_offscreen(BallManager::getInstance().ball_sprite, 
-		BALL_WIDTH, BALL_HEIGHT, 
-		BallManager::getInstance().getX(i), BallManager::getInstance().getY(i));
+		// Beware of not auto deadlocking urself, 
+		// a recurvise mutext would be more appropriate
+		//BallManager::getInstance().mutex_liste[i].lock();
+		if (BallManager::getInstance().getBall(i) != nullptr) {
+			draw_sprite_offscreen(BallManager::getInstance().ball_sprite, 
+							BALL_WIDTH, BALL_HEIGHT, 
+							BallManager::getInstance().getX(i), BallManager::getInstance().getY(i));
+		}
+		//BallManager::getInstance().mutex_liste[i].unlock();
+		
+        
     }
     copy_offscreen_to_vga();
 }
