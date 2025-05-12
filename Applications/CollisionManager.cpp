@@ -22,17 +22,17 @@ bool CollisionManager::isColliding(int pos_x, int pos_y){
 
     // test if position is platform
     if (isInsideRectangle(pos_x, pos_y, 
-                        PlatformManager::getInstance().getPlatform1().x, PlatformManager::getInstance().getPlatform1().y, 
+                        PlatformManager::getInstance().getPlatform1X(), PlatformManager::getInstance().getPlatform1Y(), 
                         PLATFORM_WIDTH, PLATFORM_HEIGHT)) {
         return true;
     }
     if (isInsideRectangle(pos_x, pos_y, 
-                        PlatformManager::getInstance().getPlatform2().x, PlatformManager::getInstance().getPlatform2().y, 
+                        PlatformManager::getInstance().getPlatform2X(), PlatformManager::getInstance().getPlatform2Y(), 
                         PLATFORM_WIDTH, PLATFORM_HEIGHT)) {
         return true;
     }
     if (isInsideRectangle(pos_x, pos_y, 
-                        PlatformManager::getInstance().getEnnemy_platform().x, PlatformManager::getInstance().getEnnemy_platform().y, 
+                        PlatformManager::getInstance().getEnnemy_platformX(), PlatformManager::getInstance().getEnnemy_platformY(), 
                         PLATFORM_WIDTH, PLATFORM_HEIGHT)) {
         return true;
     }

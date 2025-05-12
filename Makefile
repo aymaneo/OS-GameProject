@@ -50,7 +50,7 @@ KERNEL_OBJ = build/boot/sextant.elf
 
 
 OBJECTSNAMES=\
- Clavier cpu_context_switch cpu_context\
+ PlatformManager Clavier cpu_context_switch cpu_context\
  Ecran Platform\
  fonctionsES\
  gdt \
@@ -60,7 +60,7 @@ OBJECTSNAMES=\
  op_memoire\
  PortSerie\
  Semaphore Spinlock  sched\
- timer TestAndSet thread PlatformManager vga sprite BallManager Ball\
+ timer TestAndSet thread vga sprite BallManager Ball\
  BrickManager Brick CollisionManager\
  
 

@@ -1,9 +1,8 @@
 #include "Ecran.h"
 #include <sextant/stdargs.h>
-#include <Applications/PlatformManager.h>
-#include <Applications/BallManager.h>
-#include <Applications/BrickManager.h>
 #include <Applications/globals.h>
+#include <sextant/vga/vga.h>
+#include <Applications/PlatformManager.h>
 
 // Ici nous allons manipuler un tableau ecran dont on fixe l'origine au d�but de la zone m�moire video.
 
@@ -349,57 +348,3 @@ void Ecran::miniprintf(char *fmt, ...) {
 }
 
 
-void Ecran::renderScene() {
-    clear_offscreen_buffer(0);
-
-    // Render walls
-    for (size_t i = 0; i < 200; i++) {
-        plot_square_offscreen(0, i, 1, 255);
-        plot_square_offscreen(320 - 1, i, 1, 255);
-    }
-
-    // Render platforms
-    draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
-							PLATFORM_WIDTH, PLATFORM_HEIGHT, 
-							PlatformManager::getInstance().getPlatform1().x, 
-							PlatformManager::getInstance().getPlatform1().y);
-    draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
-							PLATFORM_WIDTH, PLATFORM_HEIGHT, 
-							PlatformManager::getInstance().getPlatform2().x, 
-							PlatformManager::getInstance().getPlatform2().y);
-
-    // Render enemy platform
-    draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
-							PLATFORM_WIDTH, PLATFORM_HEIGHT, 	
-							PlatformManager::getInstance().getEnnemy_platform().x, 
-							PlatformManager::getInstance().getEnnemy_platform().y);
-
-	
-	// Render bricks
-	 for (int i = 0; i < BrickManager::getInstance().getBrickCount(); ++i) {
-        if (BrickManager::getInstance().bricks[i].status) {
-            draw_sprite_offscreen(BrickManager::getInstance().sprite,
-                BRICK_WIDTH, BRICK_HEIGHT,
-                BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y);
-        }
-    }
-
-    // Render balls
-    Ball* ballBuffer[MAX_BALLS];
-    int count = 0;
-    BallManager::getInstance().getAllBalls(ballBuffer, MAX_BALLS, count);
-    for (int i = 0; i < count; ++i) {
-		// Beware of not auto deadlocking urself, 
-		// a recurvise mutext would be more appropriate
-		//BallManager::getInstance().mutex_liste[i].lock();
-		if (BallManager::getInstance().getBall(i) != nullptr) {
-			draw_sprite_offscreen(BallManager::getInstance().ball_sprite, 
-							BALL_WIDTH, BALL_HEIGHT, 
-							BallManager::getInstance().getX(i), BallManager::getInstance().getY(i));
-		}
-		//BallManager::getInstance().mutex_liste[i].unlock();
-		
-        
-    }
-    copy_offscreen_to_vga();
-}
