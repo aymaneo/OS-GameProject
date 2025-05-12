@@ -11,8 +11,18 @@ bool CollisionManager::isInsideRectangle(int x, int y, int rect_x, int rect_y, i
                 && y >= rect_y && y <= rect_y + rect_height);
 } 
 
-bool CollisionManager::applyCollision(int pos_x,int pos_y){
-    return isColliding(pos_x, pos_y);
+void CollisionManager::applyCollision(int pos_x,int pos_y){
+    // test if position is brick
+    for (int i = 0; i < BrickManager::getInstance().getBrickCount(); i++){
+        if (isInsideRectangle(pos_x, pos_y, 
+                                BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y, 
+                                BrickManager::getInstance().brickWidth, BrickManager::getInstance().brickHeight)
+            && BrickManager::getInstance().getBrick(i)->status) {
+            BrickManager::getInstance().getBrick(i)->changeStatus();
+        }    
+    }
+
+    
 }
 
 bool CollisionManager::isColliding(int pos_x, int pos_y){
@@ -69,7 +79,7 @@ bool CollisionManager::isColliding(int pos_x, int pos_y){
         if (isInsideRectangle(pos_x, pos_y, 
                                 BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y, 
                                 BrickManager::getInstance().brickWidth, BrickManager::getInstance().brickHeight)
-                && BrickManager::getInstance().bricks[i].status) {
+                && BrickManager::getInstance().getBrick(i)->status) {
             return true;
         }    
     }

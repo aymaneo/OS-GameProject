@@ -9,7 +9,7 @@ class BrickManager {
     private:
         static BrickManager* brick_manager_instance;
         int brickCount;
-
+        void generateBricks();
         BrickManager() : brickCount(0) {};
     public:
         Brick bricks[3*8];
@@ -17,8 +17,9 @@ class BrickManager {
         static BrickManager& getInstance(); 
         static const int brickWidth = BRICK_WIDTH;
         static const int brickHeight = BRICK_HEIGHT; 
-        int getBrickCount(); 
-        void generateBricks();
+        int getBrickCount();
+        Brick* getBrick(int index);
+        
 
         ~BrickManager();
 

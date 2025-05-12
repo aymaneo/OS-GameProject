@@ -45,9 +45,6 @@ Ecran ecran;
 memoire *InterfaceMemoire;
 Ecran *monEcran = &ecran;
 Semaphore *ballSpawnSema; 
-Semaphore *ballUpdateMutex;
-Semaphore *platformUpdateMutex;
-Spinlock *ballUpdateSpinlock;
 Clavier clavier;
 PlatformManager& manager = PlatformManager::getInstance();
 #define PAGINATION_USE 1
@@ -75,38 +72,7 @@ void Sextant_Init(){
 	set_vga_mode13(); 
 	set_palette_vga(palette_vga);
 }
-void intToConstChar(int number, char* buffer) {
-    int i = 0;
-    bool isNegative = false;
 
-    if (number == 0) {
-        buffer[i++] = '0';
-        buffer[i] = '\0';
-        return;
-    }
-
-    if (number < 0) {
-        isNegative = true;
-        number = -number;
-    }
-
-    while (number > 0) {
-        buffer[i++] = (number % 10) + '0';
-        number /= 10;
-    }
-
-    if (isNegative) {
-        buffer[i++] = '-';
-    }
-
-    buffer[i] = '\0';
-
-    for (int j = 0, k = i - 1; j < k; ++j, --k) {
-        char temp = buffer[j];
-        buffer[j] = buffer[k];
-        buffer[k] = temp;
-    }
-}
 
 void renderScene() {
     clear_offscreen_buffer(0);
@@ -128,16 +94,14 @@ void renderScene() {
 							PlatformManager::getInstance().getPlatform2Y());
 
     // Render enemy platform
-	//platformUpdateMutex->P();
     draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
 							PLATFORM_WIDTH, PLATFORM_HEIGHT, 	
 							PlatformManager::getInstance().getEnnemy_platformX(), 
 							PlatformManager::getInstance().getEnnemy_platformY());
-	//platformUpdateMutex->V();
 	
 	// Render bricks
 	 for (int i = 0; i < BrickManager::getInstance().getBrickCount(); ++i) {
-        if (BrickManager::getInstance().bricks[i].status) {
+        if (BrickManager::getInstance().getBrick(i)->status) {
             draw_sprite_offscreen(BrickManager::getInstance().sprite,
                 BRICK_WIDTH, BRICK_HEIGHT,
                 BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y);
@@ -148,7 +112,6 @@ void renderScene() {
     Ball* ballBuffer[MAX_BALLS];
     int count = 0;
     BallManager::getInstance().getAllBalls(ballBuffer, MAX_BALLS, count);
-	//ballUpdateMutex->P();
     for (int i = 0; i < count; ++i) {
 		// Beware of not auto deadlocking urself, 
 		// a recurvise mutext would be more appropriate
@@ -160,7 +123,6 @@ void renderScene() {
 		}
 		//BallManager::getInstance().mutex_liste[i].unlock();
     }
-	//ballUpdateMutex->V();
 
     copy_offscreen_to_vga();
 
@@ -173,21 +135,21 @@ void inputBinderPlatform(void* arg) {
 		if (clavier.testChar())  {
 			char c = clavier.getchar();
 			if (c == L_P1) {
-				//platformUpdateMutex->P();
+ 
 				PlatformManager::getInstance().movePlatform1Left();
-				//platformUpdateMutex->V();
+				 
 			}else if(c == R_P1) {
-				//platformUpdateMutex->P();
+ 
 				PlatformManager::getInstance().movePlatform1Right();
-				//platformUpdateMutex->V();
+				 
 			}else if(c == L_P2) {
-				//platformUpdateMutex->P();
+ 
 				PlatformManager::getInstance().movePlatform2Left();
-				//platformUpdateMutex->V();
+				 
 			}else if (c == R_P2) {
-				//platformUpdateMutex->P();
+ 
 				PlatformManager::getInstance().movePlatform2Right();
-				//platformUpdateMutex->V();
+				 
 			}
 		}
     }
@@ -207,19 +169,17 @@ void moveBall(void* arg){
 		Ball* ballBuffer[MAX_BALLS];
 		int count = 0;
 		BallManager::getInstance().getAllBalls(ballBuffer, MAX_BALLS, count);
-		//ballUpdateMutex->P();
 		for (int i = 0; i < count; ++i) {
 			if (BallManager::getInstance().getBall(i) != nullptr) {
-				//platformUpdateMutex->P();
+ 
 				BallManager::getInstance().getBall(i)->move();
-				//platformUpdateMutex->V();
+				 
 				if (BallManager::getInstance().getBall(i)->getY() > 195) {
 					BallManager::getInstance().removeBall(i); 
 					ballSpawnSema->V();
 				}
 			}		
 		}
-		//ballUpdateMutex->V();
 		thread_active_sleep(10);
 	}
 }
@@ -239,13 +199,9 @@ void spawnBalls(void* arg){
 
 
 void update_ennemy_plat(void* arg) {
-    //Platform* ennemy_plat = static_cast<Platform*>(arg);
     while (true) {
-		//platformUpdateMutex->P();
 		PlatformManager::getInstance().moveEnnemy_platformRight();
-		//platformUpdateMutex->V();
 		thread_active_sleep(50);
-		
 	}
 }
 
@@ -257,10 +213,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	BrickManager::getInstance();
 	PlatformManager::getInstance();
 
-	ballSpawnSema = new Semaphore(5);
-	ballUpdateMutex = new Semaphore(1);
-	platformUpdateMutex = new Semaphore(1);
-	ballUpdateSpinlock = new Spinlock();
+	ballSpawnSema = new Semaphore(4);
 	
 	create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
 	create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) nullptr);

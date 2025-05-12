@@ -47,3 +47,10 @@ void BrickManager::generateBricks(){
 		curseur_y += BrickManager::brickHeight;
 	} 
 }
+
+Brick* BrickManager::getBrick(int index) {
+	if (index < 0 || index >= brickCount) {
+		return nullptr;
+	}
+	return &bricks[index];
+}
