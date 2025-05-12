@@ -45,6 +45,7 @@ Ecran ecran;
 memoire *InterfaceMemoire;
 Ecran *monEcran = &ecran;
 Semaphore *ballSema; 
+Clavier clavier;
 PlatformManager& manager = PlatformManager::getInstance();
 #define PAGINATION_USE 1
 #define L_P1 's'
@@ -128,10 +129,10 @@ void renderScene() {
 }
 
 void update_plat(void* arg) {
-    Clavier* keyboard = static_cast<Clavier*>(arg);
+    
     while (true) {
-		if (keyboard->testChar())  {
-			char c = keyboard->getchar();
+		if (clavier.testChar())  {
+			char c = clavier.getchar();
 			if (c == L_P1) {
 				PlatformManager::getInstance().movePlatform1Left();
 			}else if(c == R_P1) {
@@ -147,7 +148,7 @@ void update_plat(void* arg) {
 
 
 void update_screen(void* arg) {
-    Ecran* screen = static_cast<Ecran*>(arg);
+    //Ecran* screen = static_cast<Ecran*>(arg);
 	
     while (true) {
 		renderScene();
@@ -194,18 +195,18 @@ void update_ennemy_plat(void* arg) {
 
 
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
-	Clavier clavier;
+	
 	Sextant_Init();
 	
-	BallManager& bm = BallManager::getInstance();
-	BrickManager& brick_manager = BrickManager::getInstance();
+	BallManager::getInstance();
+	BrickManager::getInstance();
 
 	ballSema = new Semaphore(3);
 	
-	struct thread* screen_thread = create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
-	struct thread* ennemy_thread = create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) nullptr);
-	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
-	struct thread* balls_thread = create_kernel_thread((kernel_thread_start_routine_t) spawnBalls, (void*) nullptr);
+	create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
+	create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) nullptr);
+	create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
+	create_kernel_thread((kernel_thread_start_routine_t) spawnBalls, (void*) nullptr);
 		
 	thread_exit();
 }
