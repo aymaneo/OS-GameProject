@@ -70,20 +70,8 @@ void BallManager::moveBall(int index){
 }
 
 
-void BallManager::removeBall(Ball* ball) {
-    for (int i = 0; i < ballCount; ++i) {
-        if (balls[i] == ball) {
-            mutex_liste[i].lock();
-            delete balls[i];
-            balls[i] = nullptr;
-            mutex_liste[i].unlock();
-        }
-    }
-
-    // intentionnaly not shifting the array, so that when count get to its max it stop spwning balls 
-    /*for (int i = index; i < ballCount - 1; ++i) {
-        balls[i] = balls[i + 1];
-    }*/
-    //balls[--ballCount] = nullptr;
+void BallManager::removeBall(int index) {
+    delete balls[index];
+    balls[index] = nullptr;
     
 }

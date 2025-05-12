@@ -34,7 +34,7 @@ public:
     bool addBall(int x, int y, int dx, int dy);  
     int getBallCount() const;
     void getAllBalls(Ball **outArray, int maxSize, int &outCount);
-    void removeBall(Ball* ball);
+    void removeBall(int ball);
     void moveBall(int index);
     int getX(int index);
     int getY(int index);

@@ -1,9 +1,19 @@
 #include "Platform.h"
 
 void Platform::moveLeft() {
-    x = x - speed;
+    x -= speed;
+    // science BBY
+    if (x > 320 || x < 0) {
+        x = (x % 320 + 320) % 320;
+    }
 }
 
 void Platform::moveRight() {
-    x = x + speed;
+    x += speed;
+    // science BBY
+    if (x > 320 || x < 0) {
+        x = (x % 320 + 320) % 320;
+    }
+    
+    
 }
