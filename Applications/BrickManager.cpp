@@ -32,7 +32,7 @@ void BrickManager::generateBricks(){
 		padding = (1+total_x_padding) / 2;
 	}
 
-	int number_of_lines = 3;
+	int number_of_lines = 4;
 
 	int cruseur_x = 0; 
 	int curseur_y = 3;
