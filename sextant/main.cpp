@@ -25,6 +25,7 @@
 #include <Applications/BallManager.h>
 #include <Applications/BrickManager.h>
 #include <Applications/PlatformManager.h>
+#include <Applications/Compteur.h>
 
 //#include <Applications/Entity/Entity.h>
 
@@ -46,6 +47,7 @@ memoire *InterfaceMemoire;
 Ecran *monEcran = &ecran;
 Semaphore *ballSpawnSema; 
 Clavier clavier;
+
 PlatformManager& manager = PlatformManager::getInstance();
 #define PAGINATION_USE 1
 #define L_P1 's'
@@ -103,8 +105,8 @@ void renderScene() {
 	 for (int i = 0; i < BrickManager::getInstance().getBrickCount(); ++i) {
         if (BrickManager::getInstance().getBrick(i)->status) {
             draw_sprite_offscreen(BrickManager::getInstance().sprite,
-                BRICK_WIDTH, BRICK_HEIGHT,
-                BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y);
+								BRICK_WIDTH, BRICK_HEIGHT,
+								BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y);
         }
     }
 
@@ -124,10 +126,15 @@ void renderScene() {
 		//BallManager::getInstance().mutex_liste[i].unlock();
     }
 
-    copy_offscreen_to_vga();
+    // render points
+	draw_sprite_offscreen(Compteur::getInstance().getSpriteDizaine(), 
+							NUM_WIDTH, NUM_HEIGHT, 
+							318-2*NUM_WIDTH, 70);
+	draw_sprite_offscreen(Compteur::getInstance().getSpriteUnite(), 
+							NUM_WIDTH, NUM_HEIGHT, 
+							318-NUM_WIDTH, 70);
 
-	
-	
+    copy_offscreen_to_vga();
 }
 
 void inputBinderPlatform(void* arg) {
@@ -145,11 +152,8 @@ void inputBinderPlatform(void* arg) {
 			}else if(c == L_P2) {
  
 				PlatformManager::getInstance().movePlatform2Left();
-				 
 			}else if (c == R_P2) {
- 
 				PlatformManager::getInstance().movePlatform2Right();
-				 
 			}
 		}
     }
@@ -193,7 +197,7 @@ void spawnBalls(void* arg){
 					PlatformManager::getInstance().getPlatform1X() + PLATFORM_WIDTH/2,
 					PlatformManager::getInstance().getPlatform1Y() - BALL_HEIGHT,
 					1 , -1);
-		thread_active_sleep(1000);
+		thread_active_sleep(5000);
 	}
 }
 
@@ -212,7 +216,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	BallManager::getInstance();
 	BrickManager::getInstance();
 	PlatformManager::getInstance();
-
+	Compteur::getInstance();
 	ballSpawnSema = new Semaphore(4);
 	
 	create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);

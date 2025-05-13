@@ -5,6 +5,7 @@
 #include "CollisionManager.h"
 #include "PlatformManager.h"
 #include "BrickManager.h"
+#include "Compteur.h"
 
 bool CollisionManager::isInsideRectangle(int x, int y, int rect_x, int rect_y, int rect_width, int rect_height) {
         return (x >= rect_x && x <= rect_x + rect_width 
@@ -18,6 +19,7 @@ void CollisionManager::applyCollision(int pos_x,int pos_y){
                                 BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y, 
                                 BrickManager::getInstance().brickWidth, BrickManager::getInstance().brickHeight)
             && BrickManager::getInstance().getBrick(i)->status) {
+            Compteur::getInstance().addPoints();
             BrickManager::getInstance().getBrick(i)->changeStatus();
         }    
     }
