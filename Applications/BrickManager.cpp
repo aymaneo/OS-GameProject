@@ -2,7 +2,7 @@
 
 BrickManager* BrickManager::brick_manager_instance = nullptr;
 
-BrickManager& BrickManager::getBricKManagerInstance() {
+BrickManager& BrickManager::getInstance() {
     if (!brick_manager_instance) {
         brick_manager_instance = new BrickManager();
     }
@@ -46,4 +46,11 @@ void BrickManager::generateBricks(){
 		}
 		curseur_y += BrickManager::brickHeight;
 	} 
+}
+
+Brick* BrickManager::getBrick(int index) {
+	if (index < 0 || index >= brickCount) {
+		return nullptr;
+	}
+	return &bricks[index];
 }

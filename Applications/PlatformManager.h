@@ -3,6 +3,7 @@
 #ifndef PLATFORMMANAGER_H
 #define PLATFORMMANAGER_H
 #include "Platform.h"
+#include <sextant/Synchronisation/Mutex/Mutex.h>
 
 #define PLATFORM_WIDTH  100
 #define PLATFORM_HEIGHT 7
@@ -13,11 +14,18 @@ private:
     
     static PlatformManager* instance;
     Platform platform1;
-    Platform platform2;
+    Platform platform2;    
     Platform ennemy_platform;
+    Semaphore mutex_platform1;
+    Semaphore mutex_platform2;
+    Semaphore mutex_ennemy_platform;
 
-
-    PlatformManager() : platform1(80, 165), platform2(100, 180), ennemy_platform(100, 60) {}
+    PlatformManager() : platform1(80, 165), 
+                        platform2(100, 180), 
+                        ennemy_platform(100, 60), 
+                        mutex_platform1(Semaphore(1)), 
+                        mutex_platform2(Semaphore(1)), 
+                        mutex_ennemy_platform(Semaphore(1)) {}
 
 public:
     const unsigned char sprite[PLATFORM_WIDTH*PLATFORM_HEIGHT] = 
@@ -66,18 +74,26 @@ public:
       161,   2,   3, 144,   3,   2,   3, 144,   3,   2,   3, 161,   3,   2, 161,   3,
         2, 144,   3,   2,   3, 161,   3,   2,   3, 144,   3,   2,   3,   2, 161,   2,
         3, 144,   3,   2,   3, 144,   3,   2,   2,   2,   2,   2 };
-    
-
-        
+            
     static PlatformManager& getInstance();
     ~PlatformManager();
 
     static const int platformWidth = PLATFORM_WIDTH;
     static const int platformHeight = PLATFORM_HEIGHT;
 
-    Platform& getPlatform1();
-    Platform& getPlatform2();
-    Platform& getEnnemy_platform();
+    int getPlatform1X();
+    int getPlatform1Y();
+    void movePlatform1Left();
+    void movePlatform1Right();
+    int getPlatform2X();
+    int getPlatform2Y();
+    void movePlatform2Left();
+    void movePlatform2Right();
+    int getEnnemy_platformX();
+    int getEnnemy_platformY();
+    void moveEnnemy_platformLeft();
+    void moveEnnemy_platformRight();
 };
+
 
 #endif

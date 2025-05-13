@@ -62,9 +62,16 @@ int BallManager::getY(int index){
     mutex_liste[index].unlock();
     return y;
 }
-void BallManager::move(int index){
+void BallManager::moveBall(int index){
     if (index < 0 || index >= ballCount) return;
     mutex_liste[index].lock();
     balls[index]->move();
     mutex_liste[index].unlock();
+}
+
+
+void BallManager::removeBall(int index) {
+    delete balls[index];
+    balls[index] = nullptr;
+    
 }

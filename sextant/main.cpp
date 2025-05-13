@@ -24,6 +24,7 @@
 #include "Synchronisation/Mutex/Mutex.h"
 #include <Applications/BallManager.h>
 #include <Applications/BrickManager.h>
+#include <Applications/PlatformManager.h>
 
 //#include <Applications/Entity/Entity.h>
 
@@ -43,7 +44,9 @@ unsigned long address;
 Ecran ecran;
 memoire *InterfaceMemoire;
 Ecran *monEcran = &ecran;
-Semaphore *ballSema; 
+Semaphore *ballSpawnSema; 
+Clavier clavier;
+PlatformManager& manager = PlatformManager::getInstance();
 #define PAGINATION_USE 1
 #define L_P1 's'
 #define R_P1 'd'
@@ -71,19 +74,82 @@ void Sextant_Init(){
 }
 
 
-void update_plat(void* arg) {
-    Clavier* keyboard = static_cast<Clavier*>(arg);
+void renderScene() {
+    clear_offscreen_buffer(0);
+
+    // Render walls
+    for (size_t i = 0; i < 200; i++) {
+        plot_square_offscreen(0, i, 1, 255);
+        plot_square_offscreen(320 - 1, i, 1, 255);
+    }
+
+    // Render platforms
+    draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
+							PLATFORM_WIDTH, PLATFORM_HEIGHT, 
+							PlatformManager::getInstance().getPlatform1X(), 
+							PlatformManager::getInstance().getPlatform1Y());
+    draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
+							PLATFORM_WIDTH, PLATFORM_HEIGHT, 
+							PlatformManager::getInstance().getPlatform2X(), 
+							PlatformManager::getInstance().getPlatform2Y());
+
+    // Render enemy platform
+    draw_sprite_offscreen(PlatformManager::getInstance().sprite, 
+							PLATFORM_WIDTH, PLATFORM_HEIGHT, 	
+							PlatformManager::getInstance().getEnnemy_platformX(), 
+							PlatformManager::getInstance().getEnnemy_platformY());
+	
+	// Render bricks
+	 for (int i = 0; i < BrickManager::getInstance().getBrickCount(); ++i) {
+        if (BrickManager::getInstance().getBrick(i)->status) {
+            draw_sprite_offscreen(BrickManager::getInstance().sprite,
+                BRICK_WIDTH, BRICK_HEIGHT,
+                BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y);
+        }
+    }
+
+    // Render balls
+    Ball* ballBuffer[MAX_BALLS];
+    int count = 0;
+    BallManager::getInstance().getAllBalls(ballBuffer, MAX_BALLS, count);
+    for (int i = 0; i < count; ++i) {
+		// Beware of not auto deadlocking urself, 
+		// a recurvise mutext would be more appropriate
+		//BallManager::getInstance().mutex_liste[i].lock();
+		if (BallManager::getInstance().getBall(i) != nullptr) {
+			draw_sprite_offscreen(BallManager::getInstance().ball_sprite, 
+							BALL_WIDTH, BALL_HEIGHT, 
+							BallManager::getInstance().getX(i), BallManager::getInstance().getY(i));
+		}
+		//BallManager::getInstance().mutex_liste[i].unlock();
+    }
+
+    copy_offscreen_to_vga();
+
+	
+	
+}
+
+void inputBinderPlatform(void* arg) {
     while (true) {
-		if (keyboard->testChar())  {
-			char c = keyboard->getchar();
+		if (clavier.testChar())  {
+			char c = clavier.getchar();
 			if (c == L_P1) {
-				PlatformManager::getInstance().getPlatform1().moveLeft();
+ 
+				PlatformManager::getInstance().movePlatform1Left();
+				 
 			}else if(c == R_P1) {
-				PlatformManager::getInstance().getPlatform1().moveRight();
+ 
+				PlatformManager::getInstance().movePlatform1Right();
+				 
 			}else if(c == L_P2) {
-				PlatformManager::getInstance().getPlatform2().moveLeft();
+ 
+				PlatformManager::getInstance().movePlatform2Left();
+				 
 			}else if (c == R_P2) {
-				PlatformManager::getInstance().getPlatform2().moveRight();
+ 
+				PlatformManager::getInstance().movePlatform2Right();
+				 
 			}
 		}
     }
@@ -91,61 +157,68 @@ void update_plat(void* arg) {
 
 
 void update_screen(void* arg) {
-    Ecran* screen = static_cast<Ecran*>(arg);
-	
     while (true) {
-		screen->renderScene();
-		thread_active_sleep(10);
+		renderScene();
+		thread_active_sleep(20);
     }
 }
 
 
 void moveBall(void* arg){
-	Ball* ball = static_cast<Ball*>(arg);
 	while (true){
-		ball->move();
+		Ball* ballBuffer[MAX_BALLS];
+		int count = 0;
+		BallManager::getInstance().getAllBalls(ballBuffer, MAX_BALLS, count);
+		for (int i = 0; i < count; ++i) {
+			if (BallManager::getInstance().getBall(i) != nullptr) {
+ 
+				BallManager::getInstance().getBall(i)->move();
+				 
+				if (BallManager::getInstance().getBall(i)->getY() > 195) {
+					BallManager::getInstance().removeBall(i); 
+					ballSpawnSema->V();
+				}
+			}		
+		}
 		thread_active_sleep(10);
 	}
 }
 
 void spawnBalls(void* arg){
-	while (true){	
-		ballSema->P();
+	create_kernel_thread((kernel_thread_start_routine_t) moveBall, 
+							(void*) nullptr);
+	while (true){
+		ballSpawnSema->P();
 		BallManager::getInstance().addBall(
-			PlatformManager::getInstance().getPlatform1().x, 
-			PlatformManager::getInstance().getPlatform1().y - BALL_HEIGHT, 
-			1 , -1);
-			struct thread* balls_thread = create_kernel_thread(
-				(kernel_thread_start_routine_t) moveBall, 
-				(void*) BallManager::getInstance().getBall(BallManager::getInstance().getBallCount()-1));
-		thread_active_sleep(5000);
+					PlatformManager::getInstance().getPlatform1X() + PLATFORM_WIDTH/2,
+					PlatformManager::getInstance().getPlatform1Y() - BALL_HEIGHT,
+					1 , -1);
+		thread_active_sleep(1000);
 	}
 }
 
 
 void update_ennemy_plat(void* arg) {
-    Platform* ennemy_plat = static_cast<Platform*>(arg);
     while (true) {
-		ennemy_plat->moveRight();
-		thread_active_sleep(40);
+		PlatformManager::getInstance().moveEnnemy_platformRight();
+		thread_active_sleep(50);
 	}
 }
 
 
 extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
-	Clavier clavier;
 	Sextant_Init();
 	
-	PlatformManager& manager = PlatformManager::getInstance();
-	BallManager& bm = BallManager::getInstance();
-	BrickManager& brick_manager = BrickManager::getBricKManagerInstance();
+	BallManager::getInstance();
+	BrickManager::getInstance();
+	PlatformManager::getInstance();
 
-	ballSema = new Semaphore(5);
+	ballSpawnSema = new Semaphore(4);
 	
-	struct thread* screen_thread = create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
-	struct thread* ennemy_thread = create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) &(manager.getEnnemy_platform()));
-	struct thread* event_thread = create_kernel_thread((kernel_thread_start_routine_t) update_plat, (void*) &clavier);
-	struct thread* balls_thread = create_kernel_thread((kernel_thread_start_routine_t) spawnBalls, (void*) nullptr);
+	create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
+	create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) nullptr);
+	create_kernel_thread((kernel_thread_start_routine_t) inputBinderPlatform, (void*) &clavier);
+	create_kernel_thread((kernel_thread_start_routine_t) spawnBalls, (void*) nullptr);
 		
 	thread_exit();
 }

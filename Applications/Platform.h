@@ -4,10 +4,11 @@
 class Platform {
 private:
     static const int speed = 3;
-public:
     int x;
     int y;
-    Platform(int x, int y) : x(x), y(y) {}
+    friend class PlatformManager;
     void moveLeft();
     void moveRight();
+public:
+    Platform(int x, int y) : x(x), y(y) {}
 };
