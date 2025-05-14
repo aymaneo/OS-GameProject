@@ -78,6 +78,15 @@ void Sextant_Init(){
 
 void renderScene() {
     clear_offscreen_buffer(0);
+	
+	// Render bricks
+	 for (int i = 0; i < BrickManager::getInstance().getBrickCount(); ++i) {
+        if (BrickManager::getInstance().getBrick(i)->status) {
+            draw_sprite_offscreen(BrickManager::getInstance().sprite,
+									BRICK_WIDTH, BRICK_HEIGHT,
+									BrickManager::getInstance().getBrick(i)->x, BrickManager::getInstance().getBrick(i)->y);
+        }
+    }
 
     // Render walls
     for (size_t i = 0; i < 200; i++) {
@@ -101,14 +110,7 @@ void renderScene() {
 							PlatformManager::getInstance().getEnnemy_platformX(), 
 							PlatformManager::getInstance().getEnnemy_platformY());
 	
-	// Render bricks
-	 for (int i = 0; i < BrickManager::getInstance().getBrickCount(); ++i) {
-        if (BrickManager::getInstance().getBrick(i)->status) {
-            draw_sprite_offscreen(BrickManager::getInstance().sprite,
-								BRICK_WIDTH, BRICK_HEIGHT,
-								BrickManager::getInstance().bricks[i].x, BrickManager::getInstance().bricks[i].y);
-        }
-    }
+	
 
     // Render balls
     Ball* ballBuffer[MAX_BALLS];
@@ -135,6 +137,9 @@ void renderScene() {
 							318-NUM_WIDTH, 70);
 
     copy_offscreen_to_vga();
+
+
+
 }
 
 void inputBinderPlatform(void* arg) {
@@ -217,7 +222,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	BrickManager::getInstance();
 	PlatformManager::getInstance();
 	Compteur::getInstance();
-	ballSpawnSema = new Semaphore(4);
+	ballSpawnSema = new Semaphore(3);
 	
 	create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
 	create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) nullptr);
