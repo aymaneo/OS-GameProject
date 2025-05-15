@@ -20,6 +20,7 @@ public:
 	 vaddr_t malloc(size_t taille);
 	 sextant_ret_t free(vaddr_t addr);
 	 void memoireaffiche(Ecran *ec);
+	 sextant_ret_t ref_physpage_at(ui32_t paddr);
 };
 
 #endif /* MEMOIRETAB_H_ */

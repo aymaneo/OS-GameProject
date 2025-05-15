@@ -10,6 +10,7 @@
 #define BIOS_N_VIDEO_END   0x100000
 
 #include "MemoireTab.h"
+#include "pagination/MemoirePhysique.h"
 #define ALIGN_INF(val,boundary) (((unsigned)(val)) & (~((boundary)-1)))
 /** Align on a boundary (MUST be a power of 2), so that return value >= val */
 #define ALIGN_SUP(val,boundary) ({ unsigned int __bnd=(boundary); (((((unsigned)(val))-1) & (~(__bnd - 1))) + __bnd); })
@@ -49,17 +50,39 @@ vaddr_t MemoireTab::malloc(size_t nbytes){
 			return (vaddr_t) i;
 		}
 	}
+	return SEXTANT_ERROR;
 }
 
 
 
 sextant_ret_t MemoireTab::free(vaddr_t addr) {
 	vaddr_t addr_r = (char*)addr - (char*)debut;
+	if (TabPages[addr_r/PAGE_SIZE].cpt > 0) {
+        TabPages[addr_r/PAGE_SIZE].cpt--;
+    }
 
 	if (TabPages[addr_r/PAGE_SIZE].isFree==false) {
 			TabPages[addr_r/PAGE_SIZE].isFree=true;
 	}
+
 	return SEXTANT_OK;
 }
 
 
+sextant_ret_t MemoireTab::ref_physpage_at(ui32_t paddr) {
+    int page_index = (paddr - (ui32_t)debut) / PAGE_SIZE;
+
+	if (IS_PAGE_ALIGNED(paddr) == false) {
+		return SEXTANT_ERROR;
+	}
+    if (page_index < 0 || page_index >= MAXMEM) {
+        return SEXTANT_ERROR;
+    }
+
+    TabPages[page_index].cpt++;
+
+    if (TabPages[page_index].isFree) {
+        TabPages[page_index].isFree = false;
+    }
+	return SEXTANT_OK;
+}

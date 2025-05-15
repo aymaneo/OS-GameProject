@@ -14,8 +14,11 @@
 #define ALIGN_INF(val,boundary) (((unsigned)(val)) & (~((boundary)-1)))
 /** Align on a boundary (MUST be a power of 2), so that return value >= val */
 #define ALIGN_SUP(val,boundary) ({ unsigned int __bnd=(boundary); (((((unsigned)(val))-1) & (~(__bnd - 1))) + __bnd); })
+/** True if val is aligned to the given power‑of‑2 boundary */
+#define IS_ALIGNED(val, boundary) \
+    ( ((unsigned)(val) & ((unsigned)((boundary) - 1))) == 0 )
 /** The size of a physical page (arch-dependent) */
-#define PAGE_SIZE  (4*1024)
+//#define PAGE_SIZE  (4*1024)
 /** The corresponding shift */
 #define PAGE_SHIFT 12 /* 4 kB = 2^12 B */
 /** The corresponding mask */

@@ -79,7 +79,7 @@ Pagination maPagination;
   maPagination.paging_unmap(vpage_tmp);
 }
 
-void MemoirePaginee::test() {MemoirePaginee::testP();monEcran->afficherMot(2,10,"ca marche ",BLANC);}
+void MemoirePaginee::test() {MemoirePaginee::testP();}
 
 
 void  MemoirePaginee::mem_setup(void *begin, int size,Ecran *ec){
@@ -88,53 +88,27 @@ void  MemoirePaginee::mem_setup(void *begin, int size,Ecran *ec){
 		maMemoirePhysique.mem_setup((void*)PAGE_ALIGN_SUP(begin),size,ec);
 		maPagination.paging_setup(kernel_core_base,kernel_core_top);
 		free_adress = PAGE_ALIGN_SUP(kernel_core_top);
-
 }
 
 vaddr_t  MemoirePaginee::malloc(size_t nbytes){
 	paddr_t ppage;
 	vaddr_t temp;
 	temp = free_adress;
-
 	if (nbytes>PAGE_SIZE) return SEXTANT_ERROR;
-
-
-
 	ppage =  maMemoirePhysique.malloc(PAGE_SIZE);
 	maPagination.paging_map(ppage,free_adress,false,VM_MAP_ATOMIC | VM_MAP_PROT_READ | VM_MAP_PROT_WRITE);
-
-	monEcran->afficherMot(0,40,"Malloc :",BLANC);
-	monEcran->afficherChiffre(0,50,temp);
-
-//	monEcran->afficherMot(0,40,"Malloc :",BLANC);
-//	monEcran->afficherChiffre(0,50,temp);
-
 	free_adress = free_adress+PAGE_SIZE;
 	return temp;
 }
 
 sextant_ret_t  MemoirePaginee::free(vaddr_t addr){
 	sextant_ret_t temp;
-	monEcran->afficherMot(0,60,"Free :",BLANC);
-	monEcran->afficherChiffre(0,70,addr);
-	 maMemoirePhysique.free(maPagination.paging_get_paddr(addr));
-		monEcran->afficherMot(0,60,"Free :",BLANC);
-		monEcran->afficherChiffre(0,70,addr);
-
-	temp =maPagination.paging_unmap(addr);
-
-	monEcran->afficherMot(0,60,"Free :",BLANC);
-	monEcran->afficherChiffre(0,70,addr);
-
+	maMemoirePhysique.free(maPagination.paging_get_paddr(addr));
+	temp = maPagination.paging_unmap(addr);
 	return temp;
 }
 
 void  MemoirePaginee::memoireaffiche(Ecran *ec){
-
-
-	monEcran->effacerEcran(NOIR);
 	maMemoirePhysique.memoireaffiche(ec);
-
-
 }
 

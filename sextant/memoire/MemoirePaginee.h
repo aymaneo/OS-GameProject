@@ -15,8 +15,8 @@
 class MemoirePaginee : public memoire {
 
 
-//	MemoirePhysique maMemoirePhysique;
-//	Pagination maPagination;
+	//MemoirePhysique maMemoirePhysique;
+	// Pagination maPagination;
 
 	Ecran *monEcran;
 	void test_paging(vaddr_t kernel_core_top_vaddr);

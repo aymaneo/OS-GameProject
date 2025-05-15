@@ -217,7 +217,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	BrickManager::getInstance();
 	PlatformManager::getInstance();
 	Compteur::getInstance();
-	ballSpawnSema = new Semaphore(4);
+	ballSpawnSema = new Semaphore(1);
 	
 	create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
 	create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) nullptr);
