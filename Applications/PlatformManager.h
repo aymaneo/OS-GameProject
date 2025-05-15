@@ -16,16 +16,16 @@ private:
     Platform platform1;
     Platform platform2;    
     Platform ennemy_platform;
-    Semaphore mutex_platform1;
-    Semaphore mutex_platform2;
-    Semaphore mutex_ennemy_platform;
+    Mutex mutex_platform1;
+    Mutex mutex_platform2;
+    Mutex mutex_ennemy_platform;
 
     PlatformManager() : platform1(80, 165), 
                         platform2(100, 180), 
                         ennemy_platform(100, 60), 
-                        mutex_platform1(Semaphore(1)), 
-                        mutex_platform2(Semaphore(1)), 
-                        mutex_ennemy_platform(Semaphore(1)) {}
+                        mutex_platform1(Mutex()),
+                        mutex_platform2(Mutex()),
+                        mutex_ennemy_platform(Mutex()) {}
 
 public:
     const unsigned char sprite[PLATFORM_WIDTH*PLATFORM_HEIGHT] = 
