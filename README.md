@@ -1,6 +1,6 @@
 # Breakout on Sextant
 
-This project implements a cooperative Breakout game running directly on a minimalist operating system kernel (Sextant), without relying on any external OS or runtime. It was developed as part of the Operating Systems coursework at IMT Atlantique.
+This project implements a multiplayer Vintage Breakout game running directly Sextant. It was developed as part of our Operating Systems UE at IMT Atlantique.
 
 ## Features
 
@@ -60,10 +60,8 @@ qemu-system-x86_64 -cdrom build/boot/grub.iso
 - All rendering is done using VGA mode 13h with offscreen buffering
 - Input is handled via IRQ-based keyboard interrupt
 - Timing and scheduling rely on periodic IRQ0 timer interrupts
-- No dynamic memory allocation is used (only static and controlled `new`)
 
 ## Authors
 
-Developed by [Your Names Here]  
+Developed by Julien Millon, Gregoire Le Bras et Aymane Ouraq
 IMT Atlantique – UE Systèmes d'exploitation  
-May 2025
