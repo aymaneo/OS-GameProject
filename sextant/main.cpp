@@ -147,15 +147,10 @@ void inputBinderPlatform(void* arg) {
 		if (clavier.testChar())  {
 			char c = clavier.getchar();
 			if (c == L_P1) {
- 
 				PlatformManager::getInstance().movePlatform1Left();
-				 
 			}else if(c == R_P1) {
- 
 				PlatformManager::getInstance().movePlatform1Right();
-				 
 			}else if(c == L_P2) {
- 
 				PlatformManager::getInstance().movePlatform2Left();
 			}else if (c == R_P2) {
 				PlatformManager::getInstance().movePlatform2Right();
@@ -222,7 +217,7 @@ extern "C" void Sextant_main(unsigned long magic, unsigned long addr){
 	BrickManager::getInstance();
 	PlatformManager::getInstance();
 	Compteur::getInstance();
-	ballSpawnSema = new Semaphore(3);
+	ballSpawnSema = new Semaphore(2);
 	
 	create_kernel_thread((kernel_thread_start_routine_t) update_screen, (void*) &monEcran);
 	create_kernel_thread((kernel_thread_start_routine_t) update_ennemy_plat, (void*) nullptr);

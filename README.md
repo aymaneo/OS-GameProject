@@ -9,14 +9,14 @@ This project implements a multiplayer Vintage Breakout game running directly Sex
 - Ball management (spawn, movement, collisions)
 - Brick wall that resets when cleared
 - Score display
-- Double-buffered VGA rendering (mode 13h)
+- Buffered VGA rendering (mode 13h)
 
 ## Controls
 
-- Player 1: `S` (left), `D` (right)
-- Player 2: `J` (left), `K` (right)
+- Player 1: `s` (left), `d` (right)
+- Player 2: `j` (left), `k` (right)
 
-Balls spawn periodically and destroy bricks on contact. The score increases as bricks are removed. The game continues as bricks regenerate when all are destroyed.
+Balls spawn periodically up to a limit of 2 simultaneously and destroy bricks on contact. The score increases as bricks are removed.
 
 ## Requirements
 
@@ -34,17 +34,7 @@ Optional: VSCode with DevContainer support for development.
 From the project root:
 
 ```bash
-make clean
-make
-make run_gui
-```
-
-### Manual QEMU Launch
-
-If `make run_gui` is not available, you can launch it manually:
-
-```bash
-qemu-system-x86_64 -cdrom build/boot/grub.iso
+make clean && make && make run_gui
 ```
 
 ## Project Structure
@@ -63,5 +53,5 @@ qemu-system-x86_64 -cdrom build/boot/grub.iso
 
 ## Authors
 
-Developed by Julien Millon, Gregoire Le Bras et Aymane Ouraq
+Developed by Julien Million, Gregoire Le Bras et Aymane Ouraq
 IMT Atlantique – UE Systèmes d'exploitation  
